@@ -1,30 +1,74 @@
 import React from 'react';
-import BoringAvatar, { AvatarProps } from 'boring-avatars';
+import styled from 'styled-components/macro';
 import { useStoreState } from '@/state/hooks';
 
-const crimsonPalette = ['#541019', '#8c202c', '#c94f59', '#e47a79', '#f0b0a5'];
-const bluePalette = ['#0b2147', '#1d4b91', '#5b8cff', '#88adff', '#c3d5ff'];
+type AvatarVariant = 'beam' | 'marble' | 'pixel' | 'sunset' | 'ring' | 'bauhaus';
 
-type Props = Omit<AvatarProps, 'colors'>;
+interface AvatarProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'title'> {
+    name?: string;
+    size?: number | string;
+    square?: boolean;
+    title?: boolean | string;
+    variant?: AvatarVariant;
+    colors?: string[];
+}
 
-const _Avatar = ({ variant = 'beam', ...props }: AvatarProps) => {
-    const blue = useStoreState((state) => state.settings.data?.branding.themePreset === 'blue');
+const AvatarShell = styled.span`
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: #ededed;
+    border: 1px solid #3f3f3f;
+    background: #171717;
+    font-family: var(--font-geist);
+    font-weight: 600;
+    line-height: 1;
+    user-select: none;
+`;
 
-    return <BoringAvatar colors={blue ? bluePalette : crimsonPalette} variant={variant} {...props} />;
+const avatarLabel = (name?: string) => {
+    const value = (name || 'U').trim();
+    if (!value) return 'U';
+
+    const parts = value.split(/\s+/).filter(Boolean);
+    if (parts.length > 1) {
+        return `${parts[0][0] || ''}${parts[parts.length - 1][0] || ''}`.toUpperCase();
+    }
+
+    return value.slice(0, 2).toUpperCase();
 };
 
-const _UserAvatar = ({ variant = 'beam', ...props }: Omit<Props, 'name'>) => {
-    const uuid = useStoreState((state) => state.user.data?.uuid);
-    const blue = useStoreState((state) => state.settings.data?.branding.themePreset === 'blue');
+const normalizeSize = (size?: number | string) => (typeof size === 'number' ? `${size}px` : size || '100%');
+
+const _Avatar = ({ name, size, square, title, variant: _variant, colors: _colors, style, ...props }: AvatarProps) => {
+    const resolvedSize = normalizeSize(size);
+    const label = avatarLabel(name);
 
     return (
-        <BoringAvatar
-            colors={blue ? bluePalette : crimsonPalette}
-            name={uuid || 'system'}
-            variant={variant}
+        <AvatarShell
             {...props}
-        />
+            aria-label={typeof title === 'string' ? title : name || 'Avatar'}
+            title={typeof title === 'string' ? title : title ? name : undefined}
+            style={{
+                width: resolvedSize,
+                height: resolvedSize,
+                minWidth: resolvedSize,
+                borderRadius: square ? 6 : '50%',
+                fontSize: `max(9px, calc(${resolvedSize} * 0.34))`,
+                ...style,
+            }}
+        >
+            {label}
+        </AvatarShell>
     );
+};
+
+const _UserAvatar = ({ name: _name, ...props }: AvatarProps) => {
+    const username = useStoreState((state) => state.user.data?.username);
+
+    return <_Avatar name={username || 'User'} {...props} />;
 };
 
 _Avatar.displayName = 'Avatar';
