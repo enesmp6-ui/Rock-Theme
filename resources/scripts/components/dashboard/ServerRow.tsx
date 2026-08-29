@@ -7,28 +7,25 @@ import getServerResourceUsage, { ServerStats } from '@/api/server/getServerResou
 import { bytesToString, ip, mbToBytes } from '@/lib/formatters';
 import Spinner from '@/components/elements/Spinner';
 import styled from 'styled-components/macro';
-import { MagicBentoCard } from '@/components/elements/reactbits/MagicBento';
 import { pushRockNotification } from '@/components/notifications/rockNotifications';
 
-const Card = styled(MagicBentoCard)`
+const Card = styled.div`
     min-height: 14rem;
-    border: 1px solid rgba(255, 255, 255, 0.085);
-    border-radius: 12px;
-    background: radial-gradient(circle at 92% 8%, rgba(var(--shell-accent-rgb), 0.065), transparent 34%),
-        linear-gradient(145deg, rgba(255, 255, 255, 0.025), var(--shell-panel) 48%, rgba(var(--shell-accent-rgb), 0.08));
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045), 0 18px 48px rgba(0, 0, 0, 0.12);
-    transition: border-color 220ms ease, background 220ms ease, box-shadow 320ms ease;
+    border: 1px solid var(--shell-border);
+    border-radius: 8px;
+    background: #0a0a0a;
+    transition: border-color 120ms ease, background 120ms ease;
 
     &:hover {
-        border-color: rgba(var(--shell-accent-rgb), 0.22);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.065), 0 24px 58px rgba(0, 0, 0, 0.18);
+        border-color: var(--shell-border-strong);
+        background: #0c0c0c;
     }
 
     .card-link {
         display: flex;
         min-height: 14rem;
         flex-direction: column;
-        padding: 1.25rem;
+        padding: 1.1rem;
         color: var(--shell-text);
         text-decoration: none;
     }
@@ -37,36 +34,41 @@ const Card = styled(MagicBentoCard)`
         color: var(--shell-text);
         text-decoration: none;
     }
+
     .server-title:hover {
-        color: var(--shell-accent-bright);
+        color: #fff;
     }
+
     .card-actions {
         display: flex;
         align-items: center;
         gap: 0.4rem;
     }
+
     .icon-button {
         display: grid;
         width: 2rem;
         height: 2rem;
         place-items: center;
-        color: #77737f;
+        color: #737373;
         border: 1px solid var(--shell-border);
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.025);
+        border-radius: 6px;
+        background: #111;
+        transition: color 120ms ease, background 120ms ease, border-color 120ms ease;
     }
+
     .icon-button:hover,
     .icon-button.active {
-        color: var(--shell-accent-bright);
-        border-color: rgba(var(--shell-accent-rgb), 0.3);
-        background: rgba(var(--shell-accent-rgb), 0.1);
+        color: #fff;
+        border-color: var(--shell-border-strong);
+        background: #171717;
     }
 
     .micro {
-        color: #77737f;
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        color: #737373;
+        font-family: var(--font-geist-mono);
         font-size: 0.61rem;
-        letter-spacing: 0.09em;
+        letter-spacing: 0.04em;
         text-transform: uppercase;
     }
 
@@ -74,95 +76,99 @@ const Card = styled(MagicBentoCard)`
         display: inline-flex;
         align-items: center;
         gap: 0.4rem;
-        color: var(--status-color);
         padding: 0.35rem 0.5rem;
-        border: 1px solid rgba(255, 255, 255, 0.065);
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.025);
+        color: var(--status-color);
+        border: 1px solid var(--shell-border);
+        border-radius: 6px;
+        background: #111;
     }
 
     .status svg {
         width: 0.38rem;
         height: 0.38rem;
-        filter: drop-shadow(0 0 5px var(--status-color));
     }
+
     .allocation {
         display: flex;
         align-items: center;
         gap: 0.45rem;
-        margin-top: 0.5rem;
+        margin-top: 0.45rem;
         color: var(--shell-muted);
-        font-size: 0.72rem;
+        font-family: var(--font-geist-mono);
+        font-size: 0.7rem;
     }
+
     .metrics {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
+        gap: 0.65rem;
         margin-top: auto;
-        padding-top: 1.4rem;
+        padding-top: 1.25rem;
     }
+
     .metrics > div {
         min-width: 0;
-        padding: 0.65rem 0.7rem 0.7rem;
-        border: 1px solid rgba(255, 255, 255, 0.055);
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.018);
-        transition: border-color 180ms ease, background 180ms ease;
+        padding: 0.65rem;
+        border: 1px solid var(--shell-border);
+        border-radius: 6px;
+        background: #111;
     }
-    &:hover .metrics > div {
-        border-color: rgba(var(--shell-accent-rgb), 0.09);
-        background: rgba(var(--shell-accent-rgb), 0.025);
-    }
+
     .metric-value {
-        margin-top: 0.35rem;
-        color: #d8d6dd;
-        font-size: 0.8rem;
+        margin-top: 0.3rem;
+        color: #ededed;
+        font-family: var(--font-geist-mono);
+        font-size: 0.78rem;
     }
+
     .rail {
         height: 2px;
-        margin-top: 0.6rem;
+        margin-top: 0.55rem;
         overflow: hidden;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.06);
+        background: #262626;
     }
+
     .rail > span {
         display: block;
         height: 100%;
         border-radius: inherit;
-        background: var(--shell-accent);
-        box-shadow: 0 0 8px rgba(var(--shell-accent-rgb), 0.42);
+        background: #ededed;
     }
+
     .footer {
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        gap: 0.55rem;
-        margin-top: 1.15rem;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+        margin-top: 1rem;
         padding-top: 0.8rem;
         border-top: 1px solid var(--shell-border);
     }
+
     .manage {
         display: inline-flex;
         align-items: center;
-        gap: 0.55rem;
+        gap: 0.45rem;
         min-height: 2rem;
-        padding: 0 0.75rem;
-        color: var(--shell-accent-bright);
-        border: 1px solid rgba(var(--shell-accent-rgb), 0.24);
-        border-radius: 7px;
-        background: rgba(var(--shell-accent-rgb), 0.09);
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 0.61rem;
-        font-weight: 650;
-        letter-spacing: 0.06em;
+        padding: 0 0.7rem;
+        color: #a1a1a1;
+        border: 1px solid var(--shell-border);
+        border-radius: 6px;
+        background: #111;
+        font-family: var(--font-geist-mono);
+        font-size: 0.6rem;
+        font-weight: 500;
+        letter-spacing: 0.03em;
         text-transform: uppercase;
-        transition: color 180ms ease, border-color 180ms ease, background 180ms ease, transform 180ms ease;
+        transition: color 120ms ease, border-color 120ms ease, background 120ms ease;
     }
-    &:hover .manage {
-        color: white;
-        border-color: rgba(var(--shell-accent-rgb), 0.4);
-        background: rgba(var(--shell-accent-rgb), 0.16);
-        transform: translateX(2px);
+
+    .manage:hover {
+        color: #fff;
+        border-color: var(--shell-border-strong);
+        background: #171717;
     }
 
     @media (max-width: 480px) {
@@ -175,8 +181,8 @@ const Card = styled(MagicBentoCard)`
 
         .metrics {
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 0.55rem;
-            padding-top: 1.1rem;
+            gap: 0.45rem;
+            padding-top: 1rem;
         }
 
         .micro {
@@ -184,7 +190,7 @@ const Card = styled(MagicBentoCard)`
         }
 
         .metric-value {
-            font-size: 0.73rem;
+            font-size: 0.7rem;
         }
     }
 `;
@@ -262,16 +268,7 @@ export default ({ server, className, favorite = false, onToggleFavorite, onOpenQ
         Math.min(100, limit > 0 ? (value / mbToBytes(limit)) * 100 : (value / mbToBytes(fallback)) * 100);
 
     return (
-        <Card
-            className={className}
-            glowColor={'var(--shell-accent-rgb)'}
-            particleCount={6}
-            enableStars
-            enableTilt
-            enableMagnetism
-            clickEffect={false}
-            style={{ '--status-color': color } as React.CSSProperties}
-        >
+        <Card className={className} style={{ '--status-color': color } as React.CSSProperties}>
             <div className={'card-link'}>
                 <div className={'flex items-start justify-between gap-4'}>
                     <div className={'min-w-0'}>
@@ -323,20 +320,14 @@ export default ({ server, className, favorite = false, onToggleFavorite, onOpenQ
                             <p className={'micro'}>Memory</p>
                             <p className={'metric-value'}>{bytesToString(stats.memoryUsageInBytes)}</p>
                             <div className={'rail'}>
-                                <span
-                                    style={{
-                                        width: `${metric(stats.memoryUsageInBytes, server.limits.memory, 16384)}%`,
-                                    }}
-                                />
+                                <span style={{ width: `${metric(stats.memoryUsageInBytes, server.limits.memory, 16384)}%` }} />
                             </div>
                         </div>
                         <div>
                             <p className={'micro'}>Storage</p>
                             <p className={'metric-value'}>{bytesToString(stats.diskUsageInBytes)}</p>
                             <div className={'rail'}>
-                                <span
-                                    style={{ width: `${metric(stats.diskUsageInBytes, server.limits.disk, 65536)}%` }}
-                                />
+                                <span style={{ width: `${metric(stats.diskUsageInBytes, server.limits.disk, 65536)}%` }} />
                             </div>
                         </div>
                     </div>
