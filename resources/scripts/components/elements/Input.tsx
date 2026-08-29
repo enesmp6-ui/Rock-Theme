@@ -7,48 +7,65 @@ export interface Props {
 }
 
 const light = css<Props>`
-    ${tw`bg-white border-neutral-200 text-neutral-800`};
+    color: #111;
+    border-color: #d4d4d4;
+    background: #fff;
+
     &:focus {
-        ${tw`border-primary-400`}
+        border-color: #111;
     }
 
     &:disabled {
-        ${tw`bg-neutral-100 border-neutral-200`};
+        color: #737373;
+        background: #f5f5f5;
     }
 `;
 
 const checkboxStyle = css<Props>`
-    ${tw`bg-neutral-500 cursor-pointer appearance-none inline-block align-middle select-none flex-shrink-0 w-4 h-4 text-primary-400 border border-neutral-300 rounded-sm`};
+    ${tw`cursor-pointer appearance-none inline-block align-middle select-none flex-shrink-0 w-4 h-4`};
     color-adjust: exact;
-    background-origin: border-box;
-    transition: all 75ms linear, box-shadow 25ms linear;
+    border: 1px solid #3f3f3f;
+    border-radius: 4px;
+    background: #0a0a0a;
+    transition: border-color 120ms ease, background 120ms ease;
 
     &:checked {
-        ${tw`border-transparent bg-no-repeat bg-center`};
-        background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
-        background-color: currentColor;
+        border-color: #fff;
+        background-color: #fff;
+        background-repeat: no-repeat;
+        background-position: center;
         background-size: 100% 100%;
+        background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='black' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
     }
 
-    &:focus {
-        ${tw`outline-none border-primary-300`};
-        box-shadow: 0 0 0 3px rgba(var(--shell-accent-rgb), 0.14);
+    &:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
     }
 `;
 
 const inputStyle = css<Props>`
-    // Reset to normal styling.
     resize: none;
-    ${tw`appearance-none outline-none w-full min-w-0`};
-    ${tw`p-3 rounded text-sm transition-all duration-150`};
-    ${tw`bg-neutral-600 hover:border-neutral-400 text-neutral-200 shadow-none focus:ring-0`};
-    border: 1px solid rgba(255, 255, 255, 0.11);
-    border-radius: 8px;
-    background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.025), transparent 58%);
+    ${tw`appearance-none outline-none w-full min-w-0 p-3 text-sm shadow-none focus:ring-0`};
+    min-height: 2.5rem;
+    color: #ededed;
+    border: 1px solid #262626;
+    border-radius: 6px;
+    background: #0a0a0a;
+    font-family: var(--font-geist);
+    transition: border-color 120ms ease, background 120ms ease;
+
+    &::placeholder {
+        color: #666;
+    }
+
+    &:hover:not(:disabled):not(:read-only) {
+        border-color: #3f3f3f;
+    }
 
     & + .input-help {
         ${tw`mt-1 text-xs`};
-        ${(props) => (props.hasError ? tw`text-red-200` : tw`text-neutral-200`)};
+        color: ${(props) => (props.hasError ? '#ff8b8f' : '#737373')};
     }
 
     &:required,
@@ -57,17 +74,18 @@ const inputStyle = css<Props>`
     }
 
     &:not(:disabled):not(:read-only):focus {
-        ${tw`border-primary-300 ring-2 ring-primary-400 ring-opacity-30`};
-        box-shadow: 0 10px 32px rgba(0, 0, 0, 0.12);
-        ${(props) => props.hasError && tw`border-red-300 ring-red-200`};
+        border-color: #666;
+        box-shadow: 0 0 0 1px #666;
+        ${(props) => props.hasError && css`border-color: #e5484d; box-shadow: 0 0 0 1px #e5484d;`};
     }
 
     &:disabled {
-        ${tw`opacity-75`};
+        opacity: 0.5;
+        cursor: not-allowed;
     }
 
     ${(props) => props.isLight && light};
-    ${(props) => props.hasError && tw`text-red-100 border-red-400 hover:border-red-300`};
+    ${(props) => props.hasError && css`color: #ffd1d3; border-color: #e5484d;`};
 `;
 
 const Input = styled.input<Props>`
@@ -84,6 +102,7 @@ const Input = styled.input<Props>`
         }
     }
 `;
+
 const Textarea = styled.textarea<Props>`
     ${inputStyle}
 `;
