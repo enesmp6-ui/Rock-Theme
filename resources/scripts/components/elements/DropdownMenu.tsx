@@ -10,26 +10,27 @@ interface Props {
 }
 
 export const DropdownButtonRow = styled.button<{ danger?: boolean }>`
-    ${tw`p-2 flex items-center rounded w-full`};
-    color: #c9b7bc;
-    transition: 150ms all ease;
+    ${tw`p-2 flex items-center w-full`};
+    min-height: 2.25rem;
+    color: ${(props) => (props.danger ? '#ff8b8f' : '#a1a1a1')};
+    border-radius: 6px;
+    font-size: 0.8rem;
+    transition: color 120ms ease, background 120ms ease;
 
     &:hover {
-        color: ${(props) => (props.danger ? '#ff8d98' : '#ffd6da')};
-        background: ${(props) => (props.danger ? 'rgba(225, 66, 82, 0.18)' : 'rgba(var(--shell-accent-rgb), 0.15)')};
+        color: ${(props) => (props.danger ? '#fff' : '#ededed')};
+        background: ${(props) => (props.danger ? '#3b1114' : '#171717')};
     }
 `;
 
 const Menu = styled.div`
-    ${tw`fixed p-2 rounded shadow-lg`};
+    ${tw`fixed p-1.5`};
     z-index: 10000;
-    border: 1px solid rgba(var(--shell-accent-rgb), 0.28);
-    background: radial-gradient(circle at 92% 6%, rgba(var(--shell-accent-rgb), 0.18), transparent 42%),
-        linear-gradient(145deg, rgba(31, 17, 22, 0.98), rgba(15, 11, 14, 0.99));
-    color: #c9b7bc;
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.48), 0 0 28px rgba(var(--shell-accent-rgb), 0.1),
-        inset 0 1px 0 rgba(255, 214, 218, 0.06);
-    backdrop-filter: blur(18px);
+    color: #a1a1a1;
+    border: 1px solid #262626;
+    border-radius: 8px;
+    background: #0a0a0a;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
 `;
 
 interface State {
@@ -41,10 +42,7 @@ class DropdownMenu extends React.PureComponent<Props, State> {
     menu = createRef<HTMLDivElement>();
     root = createRef<HTMLDivElement>();
 
-    state: State = {
-        posX: 0,
-        visible: false,
-    };
+    state: State = { posX: 0, visible: false };
 
     componentWillUnmount() {
         this.removeListeners();
@@ -63,24 +61,16 @@ class DropdownMenu extends React.PureComponent<Props, State> {
             const rootRect = root.getBoundingClientRect();
             const viewportPadding = 8;
             const maximumLeft = Math.max(viewportPadding, window.innerWidth - viewportPadding - menu.clientWidth);
-            const left = Math.min(
-                maximumLeft,
-                Math.max(viewportPadding, Math.round(this.state.posX - menu.clientWidth))
-            );
+            const left = Math.min(maximumLeft, Math.max(viewportPadding, Math.round(this.state.posX - menu.clientWidth)));
             const below = rootRect.bottom + 4;
             const above = rootRect.top - menu.clientHeight - 4;
-            const top =
-                below + menu.clientHeight <= window.innerHeight - viewportPadding
-                    ? below
-                    : Math.max(viewportPadding, above);
+            const top = below + menu.clientHeight <= window.innerHeight - viewportPadding ? below : Math.max(viewportPadding, above);
 
             menu.style.left = `${left}px`;
             menu.style.top = `${Math.round(top)}px`;
         }
 
-        if (!this.state.visible && prevState.visible) {
-            this.removeListeners();
-        }
+        if (!this.state.visible && prevState.visible) this.removeListeners();
     }
 
     removeListeners = () => {
@@ -102,29 +92,15 @@ class DropdownMenu extends React.PureComponent<Props, State> {
 
     windowListener = (e: MouseEvent) => {
         const menu = this.menu.current;
-
-        if (e.button === 2 || !this.state.visible || !menu) {
-            return;
-        }
-
-        if (e.target === menu || menu.contains(e.target as Node)) {
-            return;
-        }
-
-        if (e.target !== menu && !menu.contains(e.target as Node)) {
-            this.setState({ visible: false });
-        }
+        if (e.button === 2 || !this.state.visible || !menu) return;
+        if (e.target === menu || menu.contains(e.target as Node)) return;
+        this.setState({ visible: false });
     };
 
-    triggerMenu = (posX: number) =>
-        this.setState((s) => ({
-            posX: !s.visible ? posX : s.posX,
-            visible: !s.visible,
-        }));
+    triggerMenu = (posX: number) => this.setState((s) => ({ posX: !s.visible ? posX : s.posX, visible: !s.visible }));
 
     render() {
         const portalTarget = typeof document !== 'undefined' ? document.body : null;
-
         return (
             <div ref={this.root} style={{ position: 'relative', display: 'inline-block' }}>
                 {this.props.renderToggle(this.onClickHandler)}
