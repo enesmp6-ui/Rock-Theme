@@ -1,11 +1,11 @@
 import styled from 'styled-components/macro';
-import tw, { theme } from 'twin.macro';
+import tw from 'twin.macro';
 
 const SubNavigation = styled.div`
-    ${tw`w-full shadow overflow-x-auto`};
-    border-bottom: 1px solid rgba(255, 255, 255, 0.075);
-    background: linear-gradient(90deg, rgba(13, 11, 14, 0.94), rgba(34, 13, 18, 0.88), rgba(13, 11, 14, 0.94));
-    backdrop-filter: blur(18px) saturate(1.25);
+    ${tw`w-full overflow-x-auto`};
+    border-bottom: 1px solid #262626;
+    background: #000;
+    box-shadow: none;
 
     & > div {
         ${tw`flex items-center text-sm mx-auto px-2`};
@@ -13,22 +13,23 @@ const SubNavigation = styled.div`
 
         & > a,
         & > div {
-            ${tw`inline-block py-3 px-4 text-neutral-300 no-underline whitespace-nowrap transition-all duration-150`};
+            ${tw`inline-block py-3 px-4 no-underline whitespace-nowrap transition-colors duration-150`};
+            color: #737373;
 
             &:not(:first-of-type) {
                 ${tw`ml-2`};
             }
 
             &:hover {
-                ${tw`text-neutral-100`};
-                background: rgba(var(--shell-accent-rgb), 0.07);
+                color: #ededed;
+                background: #0a0a0a;
             }
 
             &:active,
             &.active {
-                ${tw`text-neutral-100`};
-                box-shadow: inset 0 -2px ${theme`colors.primary.600`.toString()};
-                background: linear-gradient(180deg, rgba(var(--shell-accent-rgb), 0.1), transparent);
+                color: #fff;
+                box-shadow: inset 0 -1px #fff;
+                background: transparent;
             }
         }
     }
