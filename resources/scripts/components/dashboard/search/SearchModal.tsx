@@ -24,10 +24,15 @@ interface Values {
 }
 
 const ServerResult = styled(Link)`
-    ${tw`flex items-center bg-neutral-900 p-4 rounded border-l-4 border-neutral-900 no-underline transition-all duration-150`};
+    ${tw`flex items-center p-4 no-underline transition-colors duration-150`};
+    color: #ededed;
+    border: 1px solid #262626;
+    border-radius: 8px;
+    background: #0a0a0a;
 
     &:hover {
-        ${tw`shadow border-primary-500`};
+        border-color: #3f3f3f;
+        background: #111;
     }
 
     &:not(:last-of-type) {
@@ -36,26 +41,23 @@ const ServerResult = styled(Link)`
 `;
 
 const CommandResult = styled(Link)`
-    ${tw`flex items-center p-3 rounded no-underline transition-all duration-150`};
-    color: var(--shell-muted);
+    ${tw`flex items-center p-3 no-underline transition-colors duration-150`};
+    color: #a1a1a1;
     border: 1px solid transparent;
+    border-radius: 6px;
 
     &:hover {
-        color: var(--shell-text);
-        border-color: var(--shell-border);
-        background: rgba(var(--shell-accent-rgb), 0.07);
+        color: #ededed;
+        border-color: #262626;
+        background: #111;
     }
 `;
 
 const SearchWatcher = () => {
     const { values, submitForm } = useFormikContext<Values>();
-
     useEffect(() => {
-        if (values.term.length >= 3) {
-            submitForm();
-        }
+        if (values.term.length >= 3) submitForm();
     }, [values.term]);
-
     return null;
 };
 
@@ -70,14 +72,10 @@ export default ({ ...props }: Props) => {
         { name: 'SSH keys', hint: 'Secure file access', path: '/account/ssh', icon: faKey },
         { name: 'Public status', hint: 'Infrastructure status', path: '/status', icon: faServer },
     ];
-    const { clearAndAddHttpError, clearFlashes } = useStoreActions(
-        (actions: Actions<ApplicationStore>) => actions.flashes
-    );
+    const { clearAndAddHttpError, clearFlashes } = useStoreActions((actions: Actions<ApplicationStore>) => actions.flashes);
 
     const search = debounce(({ term }: Values, { setSubmitting }: FormikHelpers<Values>) => {
         clearFlashes('search');
-
-        // if (ref.current) ref.current.focus();
         getServers({ query: term, type: isAdmin ? 'admin-all' : undefined })
             .then((servers) => setServers(servers.items.filter((_, index) => index < 5)))
             .catch((error) => {
@@ -89,28 +87,17 @@ export default ({ ...props }: Props) => {
     }, 500);
 
     useEffect(() => {
-        if (props.visible) {
-            if (ref.current) ref.current.focus();
-        }
+        if (props.visible) ref.current?.focus();
     }, [props.visible]);
 
-    // Formik does not support an innerRef on custom components.
-    const InputWithRef = (props: any) => <Input autoFocus {...props} ref={ref} />;
+    const InputWithRef = (inputProps: any) => <Input autoFocus {...inputProps} ref={ref} />;
 
     return (
-        <Formik
-            onSubmit={search}
-            validationSchema={object().shape({ term: string() })}
-            initialValues={{ term: '' } as Values}
-        >
+        <Formik onSubmit={search} validationSchema={object().shape({ term: string() })} initialValues={{ term: '' } as Values}>
             {({ isSubmitting, values }) => (
                 <Modal {...props}>
                     <Form>
-                        <FormikFieldWrapper
-                            name={'term'}
-                            label={'Search term'}
-                            description={'Search servers, pages, and actions.'}
-                        >
+                        <FormikFieldWrapper name={'term'} label={'Search term'} description={'Search servers, pages, and actions.'}>
                             <SearchWatcher />
                             <InputSpinner visible={isSubmitting}>
                                 <Field as={InputWithRef} name={'term'} />
@@ -118,26 +105,19 @@ export default ({ ...props }: Props) => {
                         </FormikFieldWrapper>
                     </Form>
                     <div css={tw`mt-5`}>
-                        <p css={tw`text-2xs uppercase tracking-widest text-neutral-500 mb-2`}>Quick actions</p>
+                        <p css={tw`text-xs text-neutral-500 mb-2`}>Quick actions</p>
                         {commands
-                            .filter((command) =>
-                                `${command.name} ${command.hint}`.toLowerCase().includes(values.term.toLowerCase())
-                            )
+                            .filter((command) => `${command.name} ${command.hint}`.toLowerCase().includes(values.term.toLowerCase()))
                             .map((command) => (
                                 <CommandResult key={command.path} to={command.path} onClick={() => props.onDismissed()}>
-                                    <FontAwesomeIcon icon={command.icon} css={tw`w-4 mr-3 text-primary-300`} />
+                                    <FontAwesomeIcon icon={command.icon} css={tw`w-4 mr-3 text-neutral-500`} />
                                     <span css={tw`flex-1 text-sm`}>{command.name}</span>
                                     <small css={tw`text-neutral-500`}>{command.hint}</small>
                                 </CommandResult>
                             ))}
                         {isAdmin && (
-                            <a
-                                href={'/admin'}
-                                className={
-                                    'flex items-center p-3 rounded no-underline text-neutral-400 hover:text-white'
-                                }
-                            >
-                                <FontAwesomeIcon icon={faBolt} css={tw`w-4 mr-3 text-primary-300`} />
+                            <a href={'/admin'} className={'flex items-center p-3 rounded no-underline text-neutral-400 hover:text-white hover:bg-neutral-900'}>
+                                <FontAwesomeIcon icon={faBolt} css={tw`w-4 mr-3 text-neutral-500`} />
                                 <span css={tw`flex-1 text-sm`}>Admin panel</span>
                                 <small css={tw`text-neutral-500`}>Administration</small>
                             </a>
@@ -145,15 +125,11 @@ export default ({ ...props }: Props) => {
                     </div>
                     {servers.length > 0 && (
                         <div css={tw`mt-6`}>
-                            <p css={tw`text-2xs uppercase tracking-widest text-neutral-500 mb-2`}>
+                            <p css={tw`text-xs text-neutral-500 mb-2`}>
                                 <FontAwesomeIcon icon={faTerminal} css={tw`mr-2`} /> Servers
                             </p>
                             {servers.map((server) => (
-                                <ServerResult
-                                    key={server.uuid}
-                                    to={`/server/${server.id}`}
-                                    onClick={() => props.onDismissed()}
-                                >
+                                <ServerResult key={server.uuid} to={`/server/${server.id}`} onClick={() => props.onDismissed()}>
                                     <div css={tw`flex-1 mr-4`}>
                                         <p css={tw`text-sm`}>{server.name}</p>
                                         <p css={tw`mt-1 text-xs text-neutral-400`}>
@@ -167,9 +143,7 @@ export default ({ ...props }: Props) => {
                                         </p>
                                     </div>
                                     <div css={tw`flex-none text-right`}>
-                                        <span css={tw`text-xs py-1 px-2 bg-primary-800 text-primary-100 rounded`}>
-                                            {server.node}
-                                        </span>
+                                        <span className={'text-xs py-1 px-2 rounded border border-neutral-800 bg-neutral-900 text-neutral-300'}>{server.node}</span>
                                     </div>
                                 </ServerResult>
                             ))}

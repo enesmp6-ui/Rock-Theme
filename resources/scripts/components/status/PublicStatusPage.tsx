@@ -45,91 +45,78 @@ const Page = styled.main`
     min-height: 100vh;
     place-items: center;
     padding: 2.5rem 1rem;
-    background: radial-gradient(circle at 18% 0%, rgba(var(--shell-accent-rgb), 0.16), transparent 35%),
-        radial-gradient(circle at 82% 12%, rgba(var(--shell-accent-rgb), 0.08), transparent 30%), #0a0a0c;
+    background: #000;
 
     .status-shell {
         width: min(58rem, 100%);
         padding: clamp(1.5rem, 5vw, 3rem);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: var(--shell-radius, 12px);
-        background: linear-gradient(145deg, rgba(var(--shell-accent-rgb), 0.08), rgba(12, 12, 15, 0.94) 40%);
-        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.62), inset 0 1px 0 rgba(255, 255, 255, 0.035);
-        backdrop-filter: blur(16px);
+        border: 1px solid #262626;
+        border-radius: 8px;
+        background: #0a0a0a;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+    }
+
+    .status-pill,
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        border-radius: 6px;
+        font-family: var(--font-geist-mono);
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0;
+        text-transform: none;
     }
 
     .status-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.45rem 0.85rem;
-        border-radius: 999px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-
-        &.operational {
-            color: #4ade80;
-            border: 1px solid rgba(74, 222, 128, 0.25);
-            background: rgba(74, 222, 128, 0.08);
-        }
-
-        &.degraded {
-            color: #f87171;
-            border: 1px solid rgba(248, 113, 113, 0.25);
-            background: rgba(248, 113, 113, 0.08);
-        }
-
-        &.maintenance {
-            color: #fbbf24;
-            border: 1px solid rgba(251, 191, 36, 0.25);
-            background: rgba(251, 191, 36, 0.08);
-        }
-
-        &.checking {
-            color: var(--shell-muted);
-            border: 1px solid var(--shell-border);
-            background: rgba(255, 255, 255, 0.035);
-        }
+        padding: 0.45rem 0.7rem;
+        border: 1px solid #262626;
+        background: #111;
     }
+
+    .status-pill.operational { color: #46a758; }
+    .status-pill.degraded { color: #e5484d; }
+    .status-pill.maintenance { color: #f5a623; }
+    .status-pill.checking { color: #a1a1a1; }
 
     .status-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
+        gap: 0.8rem;
         margin-top: 2rem;
+    }
+
+    .status-card,
+    .node-row {
+        border: 1px solid #262626;
+        border-radius: 8px;
+        background: #0f0f0f;
     }
 
     .status-card {
-        padding: 1.25rem;
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.02);
-        transition: border-color 0.2s ease, transform 0.2s ease;
+        padding: 1.15rem;
+        transition: border-color 120ms ease, background 120ms ease;
+    }
 
-        &:hover {
-            border-color: rgba(var(--shell-accent-rgb), 0.35);
-            transform: translateY(-2px);
-        }
+    .status-card:hover {
+        border-color: #3f3f3f;
+        background: #111;
     }
 
     .node-list {
-        margin-top: 2rem;
+        margin-top: 1rem;
         display: flex;
         flex-direction: column;
-        gap: 0.65rem;
+        gap: 0.55rem;
     }
 
     .node-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0.85rem 1.15rem;
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: 8px;
-        background: rgba(0, 0, 0, 0.25);
         gap: 1rem;
+        padding: 0.85rem 1rem;
     }
 
     .node-name {
@@ -144,69 +131,45 @@ const Page = styled.main`
         gap: 1rem;
         margin-top: 1.5rem;
         padding: 0.85rem 1rem;
-        color: #fca5a5;
-        border: 1px solid rgba(248, 113, 113, 0.2);
+        color: #ff8b8f;
+        border: 1px solid #5c2225;
         border-radius: 8px;
-        background: rgba(248, 113, 113, 0.06);
+        background: #1d0d0f;
         font-size: 0.78rem;
+    }
 
-        button {
-            flex: 0 0 auto;
-            padding: 0.35rem 0.65rem;
-            color: var(--shell-text);
-            border: 1px solid rgba(248, 113, 113, 0.24);
-            border-radius: 6px;
-            background: rgba(248, 113, 113, 0.1);
-        }
+    .status-error button {
+        padding: 0.35rem 0.65rem;
+        color: #ededed;
+        border: 1px solid #5c2225;
+        border-radius: 6px;
+        background: #2a1114;
     }
 
     .badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        font-size: 0.7rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        padding: 0.25rem 0.6rem;
-        border-radius: 4px;
+        padding: 0.25rem 0.5rem;
+        border: 1px solid #262626;
+        background: #111;
+    }
 
-        &.badge-green {
-            background: rgba(74, 222, 128, 0.12);
-            color: #4ade80;
-            border: 1px solid rgba(74, 222, 128, 0.2);
-        }
+    .badge-green { color: #46a758; }
+    .badge-red { color: #e5484d; }
+    .badge-yellow { color: #f5a623; }
 
-        &.badge-red {
-            background: rgba(248, 113, 113, 0.12);
-            color: #f87171;
-            border: 1px solid rgba(248, 113, 113, 0.2);
-        }
+    .status-link {
+        color: #ededed;
+        text-decoration: none;
+    }
 
-        &.badge-yellow {
-            background: rgba(251, 191, 36, 0.12);
-            color: #fbbf24;
-            border: 1px solid rgba(251, 191, 36, 0.2);
-        }
+    .status-link:hover {
+        color: #fff;
     }
 
     @media (max-width: 640px) {
-        .status-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .status-shell {
-            padding: 1.25rem;
-        }
-
-        .node-row {
-            align-items: flex-start;
-        }
-
-        .status-error {
-            align-items: flex-start;
-            flex-direction: column;
-        }
+        .status-grid { grid-template-columns: 1fr; }
+        .status-shell { padding: 1.25rem; }
+        .node-row { align-items: flex-start; }
+        .status-error { align-items: flex-start; flex-direction: column; }
     }
 `;
 
@@ -222,21 +185,8 @@ export default () => {
     const isChecking = !data && !error;
     const isOperational = data?.status === 'operational';
     const isMaintenance = data?.status === 'maintenance';
-
-    const pillClass = isChecking
-        ? 'checking'
-        : isOperational
-        ? 'operational'
-        : isMaintenance
-        ? 'maintenance'
-        : 'degraded';
-    const statusIcon = isChecking
-        ? faSignal
-        : isOperational
-        ? faCheckCircle
-        : isMaintenance
-        ? faTools
-        : faExclamationTriangle;
+    const pillClass = isChecking ? 'checking' : isOperational ? 'operational' : isMaintenance ? 'maintenance' : 'degraded';
+    const statusIcon = isChecking ? faSignal : isOperational ? faCheckCircle : isMaintenance ? faTools : faExclamationTriangle;
     const statusLabel = isChecking
         ? 'Checking Systems'
         : error
@@ -253,9 +203,7 @@ export default () => {
                 <section className={'status-shell text-center'}>
                     <h1 className={'text-3xl font-semibold mb-3 text-neutral-100'}>Status Unavailable</h1>
                     <p className={'text-neutral-400 mb-6'}>Public status reporting is currently disabled.</p>
-                    <Link to={'/'} className={'text-red-400 hover:text-red-300 no-underline transition-colors'}>
-                        Return to Control Panel
-                    </Link>
+                    <Link to={'/'} className={'status-link'}>Return to Control Panel</Link>
                 </section>
             </Page>
         );
@@ -271,31 +219,23 @@ export default () => {
                     <FontAwesomeIcon icon={statusIcon} /> {statusLabel}
                 </div>
 
-                <p className={'mt-8 text-xs font-semibold uppercase tracking-widest text-neutral-500'}>
-                    {name} Infrastructure Health
-                </p>
-                <h1 className={'mt-2 text-3xl sm:text-4xl font-bold text-neutral-100'}>{branding.statusTitle}</h1>
-                <p className={'mt-3 text-neutral-400 max-w-2xl leading-relaxed text-sm sm:text-base'}>
-                    {branding.statusMessage}
-                </p>
+                <p className={'mt-8 text-xs font-medium text-neutral-500'}>{name} Infrastructure Health</p>
+                <h1 className={'mt-2 text-3xl sm:text-4xl font-semibold text-neutral-100'}>{branding.statusTitle}</h1>
+                <p className={'mt-3 text-neutral-400 max-w-2xl leading-relaxed text-sm sm:text-base'}>{branding.statusMessage}</p>
 
                 {error && (
                     <div className={'status-error'} role={'alert'}>
                         <span>Live node data is temporarily unavailable. The panel will retry automatically.</span>
-                        <button type={'button'} onClick={() => mutate()}>
-                            Retry now
-                        </button>
+                        <button type={'button'} onClick={() => mutate()}>Retry now</button>
                     </div>
                 )}
 
                 <div className={'status-grid'}>
                     <div className={'status-card'}>
-                        <FontAwesomeIcon icon={faServer} className={'text-red-400 text-lg mb-3'} />
-                        <p className={'text-xs font-medium uppercase tracking-wider text-neutral-400'}>Control Panel</p>
+                        <FontAwesomeIcon icon={faServer} className={'text-neutral-300 text-lg mb-3'} />
+                        <p className={'text-xs font-medium text-neutral-400'}>Control Panel</p>
                         <div className={'mt-2'}>
-                            <span
-                                className={`badge ${error ? 'badge-red' : isChecking ? 'badge-yellow' : 'badge-green'}`}
-                            >
+                            <span className={`badge ${error ? 'badge-red' : isChecking ? 'badge-yellow' : 'badge-green'}`}>
                                 <FontAwesomeIcon icon={error ? faExclamationTriangle : faCheckCircle} />
                                 {error ? 'Status API unavailable' : isChecking ? 'Checking' : 'Operational'}
                             </span>
@@ -303,23 +243,19 @@ export default () => {
                     </div>
 
                     <div className={'status-card'}>
-                        <FontAwesomeIcon icon={faSignal} className={'text-red-400 text-lg mb-3'} />
-                        <p className={'text-xs font-medium uppercase tracking-wider text-neutral-400'}>Active Nodes</p>
+                        <FontAwesomeIcon icon={faSignal} className={'text-neutral-300 text-lg mb-3'} />
+                        <p className={'text-xs font-medium text-neutral-400'}>Active Nodes</p>
                         <div className={'mt-2'}>
                             <span className={`badge ${data?.nodes?.unavailable ? 'badge-red' : 'badge-green'}`}>
-                                <FontAwesomeIcon
-                                    icon={data?.nodes?.unavailable ? faExclamationTriangle : faCheckCircle}
-                                />
+                                <FontAwesomeIcon icon={data?.nodes?.unavailable ? faExclamationTriangle : faCheckCircle} />
                                 {data ? `${data.nodes.operational}/${data.nodes.total} Online` : 'Checking...'}
                             </span>
                         </div>
                     </div>
 
                     <div className={'status-card'}>
-                        <FontAwesomeIcon icon={faShieldAlt} className={'text-red-400 text-lg mb-3'} />
-                        <p className={'text-xs font-medium uppercase tracking-wider text-neutral-400'}>
-                            Node Maintenance
-                        </p>
+                        <FontAwesomeIcon icon={faShieldAlt} className={'text-neutral-300 text-lg mb-3'} />
+                        <p className={'text-xs font-medium text-neutral-400'}>Node Maintenance</p>
                         <div className={'mt-2'}>
                             <span className={`badge ${data?.nodes?.maintenance ? 'badge-yellow' : 'badge-green'}`}>
                                 <FontAwesomeIcon icon={data?.nodes?.maintenance ? faTools : faCheckCircle} />
@@ -331,67 +267,34 @@ export default () => {
 
                 {showNodeCards && (
                     <div className={'mt-8'}>
-                        <h2 className={'text-sm font-semibold uppercase tracking-wider text-neutral-400 mb-3'}>
-                            Node Breakdown
-                        </h2>
+                        <h2 className={'text-sm font-medium text-neutral-400 mb-3'}>Node Breakdown</h2>
                         <div className={'node-list'}>
                             {nodeItems.map((node) => (
                                 <div key={node.id} className={'node-row'}>
                                     <div className={'flex items-center gap-3'}>
                                         <FontAwesomeIcon
-                                            icon={
-                                                node.status === 'operational'
-                                                    ? faHdd
-                                                    : node.status === 'maintenance'
-                                                    ? faTools
-                                                    : faNetworkWired
-                                            }
-                                            className={
-                                                node.status === 'operational'
-                                                    ? 'text-green-400'
-                                                    : node.status === 'maintenance'
-                                                    ? 'text-yellow-400'
-                                                    : 'text-red-400'
-                                            }
+                                            icon={node.status === 'operational' ? faHdd : node.status === 'maintenance' ? faTools : faNetworkWired}
+                                            className={node.status === 'operational' ? 'text-green-400' : node.status === 'maintenance' ? 'text-yellow-400' : 'text-red-400'}
                                         />
                                         <div className={'node-name'}>
                                             <p className={'text-sm font-medium text-neutral-200'}>{node.name}</p>
                                             <p className={'text-xs text-neutral-500'}>Infrastructure node</p>
                                         </div>
                                     </div>
-                                    <div>
-                                        <span
-                                            className={`badge ${
-                                                node.status === 'operational'
-                                                    ? 'badge-green'
-                                                    : node.status === 'maintenance'
-                                                    ? 'badge-yellow'
-                                                    : 'badge-red'
-                                            }`}
-                                        >
-                                            {node.status}
-                                        </span>
-                                    </div>
+                                    <span className={`badge ${node.status === 'operational' ? 'badge-green' : node.status === 'maintenance' ? 'badge-yellow' : 'badge-red'}`}>
+                                        {node.status}
+                                    </span>
                                 </div>
                             ))}
                         </div>
                     </div>
                 )}
 
-                <div className={'mt-8 pt-6 border-t border-white/5 flex items-center justify-between flex-wrap gap-4'}>
-                    <Link
-                        to={'/'}
-                        className={
-                            'inline-flex items-center gap-2 text-sm font-medium text-red-400 hover:text-red-300 no-underline transition-colors'
-                        }
-                    >
+                <div className={'mt-8 pt-6 border-t border-neutral-800 flex items-center justify-between flex-wrap gap-4'}>
+                    <Link to={'/'} className={'status-link inline-flex items-center gap-2 text-sm font-medium'}>
                         Open Control Panel <FontAwesomeIcon icon={faArrowRight} />
                     </Link>
-                    {data?.checkedAt && (
-                        <span className={'text-xs text-neutral-500 font-mono'}>
-                            Last checked: {new Date(data.checkedAt).toLocaleTimeString()}
-                        </span>
-                    )}
+                    {data?.checkedAt && <span className={'text-xs text-neutral-500 font-mono'}>Last checked: {new Date(data.checkedAt).toLocaleTimeString()}</span>}
                 </div>
             </section>
         </Page>

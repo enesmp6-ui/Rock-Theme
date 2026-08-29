@@ -15,51 +15,98 @@ const Shell = styled.div`
     z-index: 160;
     display: flex;
     justify-content: flex-end;
-    background: rgba(2, 2, 3, 0.58);
-    backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.64);
 
     aside {
         width: min(29rem, 100%);
         height: 100%;
         padding: 1.35rem;
         overflow-y: auto;
-        border-left: 1px solid var(--shell-border-strong);
-        background: linear-gradient(155deg, rgba(var(--shell-accent-rgb), 0.1), var(--shell-panel-strong) 34%);
-        box-shadow: -30px 0 80px rgba(0, 0, 0, 0.45);
-        animation: drawer-in 240ms cubic-bezier(0.22, 1, 0.36, 1);
+        border-left: 1px solid #262626;
+        background: #0a0a0a;
+        box-shadow: -24px 0 70px rgba(0, 0, 0, 0.5);
+        animation: drawer-in 180ms ease-out;
     }
+
     .drawer-card {
         padding: 1rem;
-        border: 1px solid var(--shell-border);
-        border-radius: var(--shell-radius);
-        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid #262626;
+        border-radius: 8px;
+        background: #0f0f0f;
     }
+
     .drawer-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 0.55rem;
         margin-top: 1rem;
     }
+
     .drawer-grid > div {
         padding: 0.75rem;
-        border: 1px solid var(--shell-border);
-        border-radius: calc(var(--shell-radius) - 3px);
+        border: 1px solid #262626;
+        border-radius: 6px;
+        background: #111;
     }
+
+    .drawer-grid small,
+    .drawer-card label,
+    .drawer-card > p {
+        color: #737373;
+        letter-spacing: 0.04em;
+        text-transform: none;
+    }
+
+    .drawer-grid p {
+        margin-top: 0.3rem;
+        color: #ededed;
+        font-family: var(--font-geist-mono);
+        font-size: 0.82rem;
+    }
+
     .power-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 0.55rem;
     }
-    .power-grid button {
-        min-height: 2.5rem;
-        border: 1px solid rgba(var(--shell-accent-rgb), 0.28);
-        border-radius: 8px;
-        background: rgba(var(--shell-accent-rgb), 0.09);
-        color: var(--shell-text);
+
+    .power-grid button,
+    aside > div:first-child button {
+        min-height: 2.35rem;
+        color: #ededed;
+        border: 1px solid #262626;
+        border-radius: 6px;
+        background: #111;
+        transition: border-color 120ms ease, background 120ms ease;
     }
+
+    .power-grid button:hover:not(:disabled),
+    aside > div:first-child button:hover {
+        border-color: #3f3f3f;
+        background: #171717;
+    }
+
     .power-grid button:disabled {
-        opacity: 0.45;
+        opacity: 0.4;
+        cursor: not-allowed;
     }
+
+    input {
+        color: #ededed !important;
+        border: 1px solid #262626 !important;
+        border-radius: 6px !important;
+        background: #0a0a0a !important;
+    }
+
+    input:focus {
+        border-color: #666 !important;
+        box-shadow: 0 0 0 1px #666;
+    }
+
+    a {
+        color: #ededed;
+    }
+
     @media (max-width: 420px) {
         aside {
             padding: 1rem;
@@ -69,9 +116,10 @@ const Shell = styled.div`
             grid-template-columns: 1fr;
         }
     }
+
     @keyframes drawer-in {
         from {
-            transform: translateX(2rem);
+            transform: translateX(1rem);
             opacity: 0;
         }
     }
@@ -93,6 +141,7 @@ export default ({ server, stats, group, onGroupChange, onClose }: Props) => {
     onCloseRef.current = onClose;
     const allocation = server.allocations.find((candidate) => candidate.isDefault);
     const address = allocation ? `${allocation.alias || ip(allocation.ip)}:${allocation.port}` : '';
+
     const power = (signal: 'start' | 'restart' | 'stop') => {
         setBusy(true);
         setMessage('');
@@ -115,14 +164,10 @@ export default ({ server, stats, group, onGroupChange, onClose }: Props) => {
     }, []);
 
     return (
-        <Shell
-            role={'dialog'}
-            aria-modal={'true'}
-            onMouseDown={(event) => event.target === event.currentTarget && onClose()}
-        >
+        <Shell role={'dialog'} aria-modal={'true'} onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
             <aside>
                 <div className={'flex items-center justify-between mb-8'}>
-                    <span className={'text-xs uppercase tracking-widest text-neutral-500'}>
+                    <span className={'text-xs text-neutral-500'}>
                         <FontAwesomeIcon icon={faBolt} className={'mr-2'} />
                         Quick control
                     </span>
@@ -143,27 +188,15 @@ export default ({ server, stats, group, onGroupChange, onClose }: Props) => {
                     {address} <FontAwesomeIcon icon={faCopy} className={'ml-2'} />
                 </button>
                 <div className={'drawer-grid'}>
-                    <div>
-                        <small className={'text-neutral-500'}>CPU</small>
-                        <p>{stats ? `${stats.cpuUsagePercent.toFixed(1)}%` : '—'}</p>
-                    </div>
-                    <div>
-                        <small className={'text-neutral-500'}>Memory</small>
-                        <p>{stats ? bytesToString(stats.memoryUsageInBytes) : '—'}</p>
-                    </div>
-                    <div>
-                        <small className={'text-neutral-500'}>Disk</small>
-                        <p>{stats ? bytesToString(stats.diskUsageInBytes) : '—'}</p>
-                    </div>
+                    <div><small>CPU</small><p>{stats ? `${stats.cpuUsagePercent.toFixed(1)}%` : '—'}</p></div>
+                    <div><small>Memory</small><p>{stats ? bytesToString(stats.memoryUsageInBytes) : '—'}</p></div>
+                    <div><small>Disk</small><p>{stats ? bytesToString(stats.diskUsageInBytes) : '—'}</p></div>
                 </div>
                 <div className={'drawer-card mt-5'}>
-                    <label htmlFor={'server-group'} className={'text-xs uppercase tracking-widest text-neutral-500'}>
-                        Server group
-                    </label>
+                    <label htmlFor={'server-group'} className={'text-xs text-neutral-500'}>Server group</label>
                     <input
                         id={'server-group'}
-                        className={'mt-2 w-full rounded border border-neutral-700 px-3 py-2'}
-                        style={{ color: 'var(--shell-text)', background: 'var(--shell-panel)' }}
+                        className={'mt-2 w-full px-3 py-2'}
                         value={group}
                         onChange={(event) => onGroupChange(event.currentTarget.value)}
                         placeholder={'Production, Games, Clients…'}
@@ -171,39 +204,21 @@ export default ({ server, stats, group, onGroupChange, onClose }: Props) => {
                     />
                 </div>
                 <div className={'drawer-card mt-5'}>
-                    <p className={'text-xs uppercase tracking-widest text-neutral-500 mb-3'}>Power</p>
+                    <p className={'text-xs text-neutral-500 mb-3'}>Power</p>
                     <div className={'power-grid'}>
-                        <button
-                            type={'button'}
-                            disabled={busy || !server.powerPermissions.start}
-                            onClick={() => power('start')}
-                        >
-                            <FontAwesomeIcon icon={faPlay} className={'mr-2'} />
-                            Start
+                        <button type={'button'} disabled={busy || !server.powerPermissions.start} onClick={() => power('start')}>
+                            <FontAwesomeIcon icon={faPlay} className={'mr-2'} />Start
                         </button>
-                        <button
-                            type={'button'}
-                            disabled={busy || !server.powerPermissions.restart}
-                            onClick={() => power('restart')}
-                        >
-                            <FontAwesomeIcon icon={faRedo} className={'mr-2'} />
-                            Restart
+                        <button type={'button'} disabled={busy || !server.powerPermissions.restart} onClick={() => power('restart')}>
+                            <FontAwesomeIcon icon={faRedo} className={'mr-2'} />Restart
                         </button>
-                        <button
-                            type={'button'}
-                            disabled={busy || !server.powerPermissions.stop}
-                            onClick={() => power('stop')}
-                        >
-                            <FontAwesomeIcon icon={faStop} className={'mr-2'} />
-                            Stop
+                        <button type={'button'} disabled={busy || !server.powerPermissions.stop} onClick={() => power('stop')}>
+                            <FontAwesomeIcon icon={faStop} className={'mr-2'} />Stop
                         </button>
                     </div>
                     {!!message && <p className={'mt-3 text-xs text-neutral-400'}>{message}</p>}
                 </div>
-                <Link
-                    className={'mt-6 inline-flex items-center text-primary-300 no-underline'}
-                    to={`/server/${server.id}`}
-                >
+                <Link className={'mt-6 inline-flex items-center no-underline'} to={`/server/${server.id}`}>
                     Open full server <FontAwesomeIcon icon={faArrowRight} className={'ml-2'} />
                 </Link>
             </aside>

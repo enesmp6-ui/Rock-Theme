@@ -15,111 +15,72 @@ import { useLocation } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
-import { ShinyText, SplitText } from '@/components/elements/ReactBitsEffects';
-import { MagicBentoGrid } from '@/components/elements/reactbits/MagicBento';
 import QuickServerDrawer from '@/components/dashboard/QuickServerDrawer';
 import { ServerStats } from '@/api/server/getServerResourceUsage';
 import { getRockAccountData, saveServerPreferences, ServerPreference } from '@/api/account/rockData';
 
 const DashboardHero = styled.section`
     position: relative;
-    margin-right: -2rem;
-    margin-bottom: 2.5rem;
-    margin-left: -2rem;
-    padding: 3.5rem 2rem 2.35rem;
-    overflow: hidden;
+    margin-bottom: 1.5rem;
+    padding: 2rem 0 1.75rem;
     border-bottom: 1px solid var(--shell-border);
-    background: linear-gradient(105deg, var(--shell-bg), rgba(var(--shell-accent-rgb), 0.14), var(--shell-panel));
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035), inset 0 -30px 90px rgba(0, 0, 0, 0.12);
-
-    .hero-art {
-        position: absolute;
-        inset: 0 0 0 42%;
-        z-index: 1;
-        pointer-events: none;
-        background-repeat: no-repeat;
-        background-position: center 42%;
-        background-size: cover;
-        opacity: 0.58;
-        filter: saturate(0.86) contrast(1.03);
-        -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.35) 18%, black 42%, black 100%);
-        mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.35) 18%, black 42%, black 100%);
-    }
+    background: #000;
 
     .hero-content {
-        position: relative;
-        z-index: 2;
         max-width: 48rem;
-    }
-
-    .hero-content::before {
-        position: absolute;
-        top: -0.4rem;
-        bottom: -0.4rem;
-        left: -1.15rem;
-        width: 1px;
-        content: '';
-        background: linear-gradient(180deg, transparent, rgba(var(--shell-accent-rgb), 0.48), transparent);
-    }
-
-    &::before {
-        position: absolute;
-        top: -13rem;
-        left: 52%;
-        width: 34rem;
-        height: 25rem;
-        content: '';
-        pointer-events: none;
-        border-radius: 50%;
-        background: rgba(var(--shell-accent-rgb), 0.2);
-        filter: blur(100px);
     }
 
     .eyebrow,
     .hero-stat {
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        text-transform: uppercase;
+        font-family: var(--font-geist-mono);
     }
 
     .eyebrow {
-        margin-bottom: 1.1rem;
-        color: #77737f;
-        font-size: 0.64rem;
+        margin-bottom: 0.7rem;
+        color: #737373;
+        font-size: 0.68rem;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+
+    .hero-title {
+        margin: 0;
+        color: #ededed;
+        font-family: var(--font-geist);
+        font-size: clamp(2rem, 4vw, 3rem);
         font-weight: 600;
-        letter-spacing: 0.16em;
+        letter-spacing: -0.05em;
+        line-height: 1.05;
     }
 
     .hero-copy {
-        position: relative;
-        z-index: 1;
-        max-width: 36rem;
-        margin-top: 1rem;
+        max-width: 38rem;
+        margin-top: 0.85rem;
         color: var(--shell-muted);
-        font-size: 0.88rem;
-        line-height: 1.7;
+        font-size: 0.9rem;
+        line-height: 1.6;
     }
 
     .hero-stats {
-        position: relative;
-        z-index: 1;
         display: flex;
         align-items: center;
-        gap: 1.35rem;
-        margin-top: 2.2rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1.35rem;
     }
 
     .hero-stat {
-        display: flex;
+        display: inline-flex;
         align-items: center;
         gap: 0.45rem;
-        color: #9c99a3;
-        font-size: 0.64rem;
-        letter-spacing: 0.05em;
-        padding: 0.38rem 0.58rem;
-        border: 1px solid rgba(255, 255, 255, 0.065);
-        border-radius: 999px;
-        background: rgba(8, 8, 9, 0.34);
-        backdrop-filter: blur(12px);
+        min-height: 30px;
+        padding: 0 0.65rem;
+        color: #a1a1a1;
+        border: 1px solid var(--shell-border);
+        border-radius: 6px;
+        background: #0a0a0a;
+        font-size: 0.68rem;
     }
 
     .hero-dot {
@@ -128,34 +89,12 @@ const DashboardHero = styled.section`
         color: var(--shell-success);
     }
 
-    @media (max-width: 1150px) {
-        margin-right: -1.25rem;
-        margin-left: -1.25rem;
-        padding-right: 1.25rem;
-        padding-left: 1.25rem;
-    }
-
     @media (max-width: 640px) {
-        margin-right: -1rem;
-        margin-left: -1rem;
-        margin-bottom: 1.6rem;
-        padding: 2.7rem 1rem 1.8rem;
-        .hero-art {
-            left: 18%;
-            opacity: 0.24;
-        }
-        .hero-content::before {
-            display: none;
-        }
-        .hero-stats {
-            flex-wrap: wrap;
-            gap: 0.65rem 1rem;
-            margin-top: 1.55rem;
-        }
-        .hero-copy {
-            max-width: 18rem;
-            margin-top: 0.8rem;
-            font-size: 0.82rem;
+        padding: 1.5rem 0;
+        margin-bottom: 1.2rem;
+
+        .hero-title {
+            font-size: 2rem;
         }
     }
 `;
@@ -165,7 +104,7 @@ const DashboardToolbar = styled.div`
     align-items: center;
     justify-content: flex-end;
     gap: 1rem;
-    margin-bottom: 0.85rem;
+    margin-bottom: 1rem;
 
     @media (max-width: 640px) {
         align-items: flex-start;
@@ -173,30 +112,90 @@ const DashboardToolbar = styled.div`
     }
 `;
 
-const ServerGrid = styled(MagicBentoGrid)`
+const FilterBar = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 0.7rem;
+    border: 1px solid var(--shell-border);
+    border-radius: 8px;
+    background: #0a0a0a;
+
+    .filters {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+    }
+
+    .filter-label {
+        margin-right: 0.35rem;
+        color: #666;
+        font-family: var(--font-geist-mono);
+        font-size: 0.65rem;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    button {
+        min-height: 30px;
+        padding: 0 0.65rem;
+        color: #a1a1a1;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        background: transparent;
+        font-size: 0.75rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: color 120ms ease, background 120ms ease, border-color 120ms ease;
+    }
+
+    button:hover {
+        color: #ededed;
+        border-color: var(--shell-border);
+        background: #111;
+    }
+
+    button.active {
+        color: #fff;
+        border-color: var(--shell-border-strong);
+        background: #171717;
+    }
+`;
+
+const ServerGrid = styled.div`
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.8rem;
+
     @media (max-width: 900px) {
         grid-template-columns: 1fr;
     }
 `;
 
 const SkeletonCard = styled.div`
+    position: relative;
     min-height: 14rem;
+    overflow: hidden;
     border: 1px solid var(--shell-border);
     border-radius: var(--shell-radius);
-    background: linear-gradient(
-        110deg,
-        rgba(255, 255, 255, 0.018) 8%,
-        rgba(var(--shell-accent-rgb), 0.07) 18%,
-        rgba(255, 255, 255, 0.018) 33%
-    );
-    background-size: 220% 100%;
-    animation: skeleton-wave 1.5s linear infinite;
+    background: #0a0a0a;
+
+    &::after {
+        position: absolute;
+        inset: 0;
+        content: '';
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.035), transparent);
+        transform: translateX(-100%);
+        animation: skeleton-wave 1.6s ease-in-out infinite;
+    }
+
     @keyframes skeleton-wave {
         to {
-            background-position-x: -220%;
+            transform: translateX(100%);
         }
     }
 `;
@@ -274,14 +273,9 @@ export default () => {
     return (
         <PageContentBlock className='content-dashboard' title={'Dashboard'} showFlashKey={'dashboard'}>
             <DashboardHero>
-                {!!branding.dashboardImage && (
-                    <div className={'hero-art'} style={{ backgroundImage: `url("${branding.dashboardImage}")` }} />
-                )}
                 <div className={'hero-content'}>
-                    <p className={'eyebrow'}>
-                        <ShinyText>{branding.owner} / Control</ShinyText>
-                    </p>
-                    <SplitText text={branding.dashboardTitle} />
+                    <p className={'eyebrow'}>{branding.owner} / Control</p>
+                    <h1 className={'hero-title'}>{branding.dashboardTitle}</h1>
                     {!!dashboardSubtitle && <p className={'hero-copy'}>{dashboardSubtitle}</p>}
                     <div className={'hero-stats'}>
                         <div className={'hero-stat'}>
@@ -307,30 +301,20 @@ export default () => {
                     </div>
                 </DashboardToolbar>
             )}
-            <div
-                className={
-                    'flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 p-3 rounded-xl border border-white/5 bg-black/20 backdrop-blur-md'
-                }
-            >
-                <div className={'flex flex-wrap items-center gap-2'}>
-                    <span className={'text-xs font-semibold uppercase tracking-wider text-neutral-500 mr-1'}>
-                        Filters:
-                    </span>
+            <FilterBar>
+                <div className={'filters'}>
+                    <span className={'filter-label'}>Filters</span>
                     {['All', 'Favorites', ...groups].map((group) => (
                         <button
                             key={group}
                             onClick={() => setActiveGroup(group)}
-                            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all border ${
-                                activeGroup === group
-                                    ? 'border-red-500/50 text-red-300 bg-red-950/40 shadow-sm shadow-red-950'
-                                    : 'border-neutral-800 text-neutral-400 hover:border-neutral-700 hover:text-neutral-300 bg-neutral-900/50'
-                            }`}
+                            className={activeGroup === group ? 'active' : undefined}
                         >
                             {group === 'All' ? 'All Servers' : group}
                         </button>
                     ))}
                 </div>
-            </div>
+            </FilterBar>
             {!servers ? (
                 <ServerGrid>
                     {Array.from({ length: 4 }).map((_, index) => (

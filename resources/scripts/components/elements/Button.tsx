@@ -11,121 +11,102 @@ interface Props {
 }
 
 const ButtonStyle = styled.button<Omit<Props, 'isLoading'>>`
-    ${tw`relative inline-block p-2 uppercase tracking-wide text-sm transition-all duration-150 border overflow-hidden`};
-    border-radius: 8px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-    transform: translateZ(0);
-
-    &::before {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: -75%;
-        width: 42%;
-        content: '';
-        pointer-events: none;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        transform: skewX(-20deg);
-        transition: left 520ms cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    &:hover:not(:disabled) {
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 10px 28px rgba(0, 0, 0, 0.16);
-        transform: translateY(-1px);
-    }
-
-    &:hover:not(:disabled)::before {
-        left: 135%;
-    }
-
-    &:active:not(:disabled) {
-        transform: translateY(0);
-    }
-
-    & > span {
-        position: relative;
-        z-index: 1;
-    }
+    ${tw`relative inline-flex items-center justify-center text-sm transition-colors duration-150 border`};
+    min-height: 2.25rem;
+    border-radius: 6px;
+    font-family: var(--font-geist);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-transform: none;
+    box-shadow: none;
 
     ${(props) =>
         ((!props.isSecondary && !props.color) || props.color === 'primary') &&
         css<Props>`
-            ${(props) => !props.isSecondary && tw`bg-primary-500 border-primary-600 border text-primary-50`};
-            background-image: linear-gradient(135deg, rgba(var(--shell-accent-rgb), 0.18), transparent 48%);
+            color: #000;
+            border-color: #fff;
+            background: #fff;
 
             &:hover:not(:disabled) {
-                ${tw`bg-primary-600 border-primary-700`};
+                border-color: #d4d4d4;
+                background: #eaeaea;
             }
         `};
 
     ${(props) =>
         props.color === 'grey' &&
         css`
-            ${tw`border-neutral-600 bg-neutral-500 text-neutral-50`};
+            color: #ededed;
+            border-color: #262626;
+            background: #111;
 
             &:hover:not(:disabled) {
-                ${tw`bg-neutral-600 border-neutral-700`};
+                border-color: #3f3f3f;
+                background: #171717;
             }
         `};
 
     ${(props) =>
         props.color === 'green' &&
-        css<Props>`
-            ${tw`border-green-600 bg-green-500 text-green-50`};
+        css`
+            color: #fff;
+            border-color: #2f7d4c;
+            background: #238636;
 
             &:hover:not(:disabled) {
-                ${tw`bg-green-600 border-green-700`};
+                background: #2ea043;
             }
-
-            ${(props) =>
-                props.isSecondary &&
-                css`
-                    &:active:not(:disabled) {
-                        ${tw`bg-green-600 border-green-700`};
-                    }
-                `};
         `};
 
     ${(props) =>
         props.color === 'red' &&
-        css<Props>`
-            ${tw`border-red-600 bg-red-500 text-red-50`};
+        css`
+            color: #fff;
+            border-color: #8f2d31;
+            background: #da3633;
 
             &:hover:not(:disabled) {
-                ${tw`bg-red-600 border-red-700`};
+                background: #f85149;
             }
-
-            ${(props) =>
-                props.isSecondary &&
-                css`
-                    &:active:not(:disabled) {
-                        ${tw`bg-red-600 border-red-700`};
-                    }
-                `};
         `};
 
     ${(props) => props.size === 'xsmall' && tw`px-2 py-1 text-xs`};
     ${(props) => (!props.size || props.size === 'small') && tw`px-4 py-2`};
-    ${(props) => props.size === 'large' && tw`p-4 text-sm`};
-    ${(props) => props.size === 'xlarge' && tw`p-4 w-full`};
+    ${(props) => props.size === 'large' && tw`px-5 py-3 text-sm`};
+    ${(props) => props.size === 'xlarge' && tw`px-5 py-3 w-full`};
 
     ${(props) =>
         props.isSecondary &&
         css<Props>`
-            ${tw`border-neutral-600 bg-transparent text-neutral-200`};
+            color: #ededed;
+            border-color: #262626;
+            background: #0a0a0a;
 
             &:hover:not(:disabled) {
-                ${tw`border-neutral-500 text-neutral-100`};
-                ${(props) => props.color === 'red' && tw`bg-red-500 border-red-600 text-red-50`};
-                ${(props) => props.color === 'primary' && tw`bg-primary-500 border-primary-600 text-primary-50`};
-                ${(props) => props.color === 'green' && tw`bg-green-500 border-green-600 text-green-50`};
+                color: #fff;
+                border-color: #3f3f3f;
+                background: #111;
             }
+
+            ${props.color === 'red' &&
+            css`
+                color: #ff8b8f;
+                &:hover:not(:disabled) {
+                    color: #fff;
+                    border-color: #8f2d31;
+                    background: #3b1114;
+                }
+            `};
         `};
 
+    &:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+
     &:disabled {
-        opacity: 0.55;
-        cursor: default;
-        transform: none;
+        opacity: 0.45;
+        cursor: not-allowed;
     }
 `;
 
@@ -143,7 +124,6 @@ const Button: React.FC<ComponentProps> = ({ children, isLoading, ...props }) => 
 );
 
 type LinkProps = Omit<JSX.IntrinsicElements['a'], 'ref' | keyof Props> & Props;
-
 const LinkButton: React.FC<LinkProps> = (props) => <ButtonStyle as={'a'} {...props} />;
 
 export { LinkButton, ButtonStyle };

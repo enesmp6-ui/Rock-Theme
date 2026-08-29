@@ -22,8 +22,7 @@ export interface ModalProps extends RequiredModalProps {
 
 export const ModalMask = styled.div`
     ${tw`fixed z-50 overflow-auto flex w-full inset-0`};
-    background: rgba(3, 3, 4, 0.78);
-    backdrop-filter: blur(12px) saturate(0.9);
+    background: rgba(0, 0, 0, 0.72);
 `;
 
 const ModalContainer = styled.div<{ alignTop?: boolean }>`
@@ -31,8 +30,8 @@ const ModalContainer = styled.div<{ alignTop?: boolean }>`
     max-height: calc(100vh - 8rem);
     ${breakpoint('md')`max-width: 75%`};
     ${breakpoint('lg')`max-width: 50%`};
-
     ${tw`relative flex flex-col w-full m-auto`};
+
     ${(props) =>
         props.alignTop &&
         css`
@@ -45,39 +44,24 @@ const ModalContainer = styled.div<{ alignTop?: boolean }>`
     & > .modal-surface {
         position: relative;
         overflow-x: hidden;
-        color: var(--shell-text);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        background: linear-gradient(
-            145deg,
-            rgba(255, 255, 255, 0.055),
-            rgba(13, 12, 14, 0.97) 45%,
-            rgba(68, 13, 21, 0.16)
-        );
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.075), 0 32px 90px rgba(0, 0, 0, 0.55);
-    }
-
-    & > .modal-surface::before {
-        position: absolute;
-        top: 0;
-        right: 12%;
-        left: 12%;
-        height: 1px;
-        content: '';
-        pointer-events: none;
-        background: linear-gradient(90deg, transparent, rgba(var(--shell-accent-rgb), 0.72), transparent);
+        color: #ededed;
+        border: 1px solid #262626;
+        border-radius: 8px;
+        background: #0a0a0a;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
     }
 
     & > .close-icon {
-        ${tw`absolute right-0 p-2 text-white cursor-pointer opacity-50 transition-all duration-150 ease-linear hover:opacity-100`};
+        ${tw`absolute right-0 p-2 cursor-pointer transition-colors duration-150`};
         top: -2.5rem;
+        color: #a1a1a1;
 
         &:hover {
-            ${tw`transform rotate-90`}
+            color: #fff;
         }
 
         & > svg {
-            ${tw`w-6 h-6`};
+            ${tw`w-5 h-5`};
         }
     }
 `;
@@ -94,22 +78,13 @@ const Modal: React.FC<ModalProps> = ({
     children,
 }) => {
     const [render, setRender] = useState(visible);
-
-    const isDismissable = useMemo(() => {
-        return (dismissable || true) && !(showSpinnerOverlay || false);
-    }, [dismissable, showSpinnerOverlay]);
+    const isDismissable = useMemo(() => (dismissable || true) && !(showSpinnerOverlay || false), [dismissable, showSpinnerOverlay]);
 
     useEffect(() => {
         if (!isDismissable || !closeOnEscape) return;
-
-        const handler = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') setRender(false);
-        };
-
+        const handler = (e: KeyboardEvent) => e.key === 'Escape' && setRender(false);
         window.addEventListener('keydown', handler);
-        return () => {
-            window.removeEventListener('keydown', handler);
-        };
+        return () => window.removeEventListener('keydown', handler);
     }, [isDismissable, closeOnEscape, render]);
 
     useEffect(() => setRender(visible), [visible]);
@@ -122,44 +97,26 @@ const Modal: React.FC<ModalProps> = ({
                 onMouseDown={(e) => {
                     if (isDismissable && closeOnBackground) {
                         e.stopPropagation();
-                        if (e.target === e.currentTarget) {
-                            setRender(false);
-                        }
+                        if (e.target === e.currentTarget) setRender(false);
                     }
                 }}
             >
                 <ModalContainer alignTop={top}>
                     {isDismissable && (
                         <div className={'close-icon'} onClick={() => setRender(false)}>
-                            <svg
-                                xmlns={'http://www.w3.org/2000/svg'}
-                                fill={'none'}
-                                viewBox={'0 0 24 24'}
-                                stroke={'currentColor'}
-                            >
-                                <path
-                                    strokeLinecap={'round'}
-                                    strokeLinejoin={'round'}
-                                    strokeWidth={'2'}
-                                    d={'M6 18L18 6M6 6l12 12'}
-                                />
+                            <svg xmlns={'http://www.w3.org/2000/svg'} fill={'none'} viewBox={'0 0 24 24'} stroke={'currentColor'}>
+                                <path strokeLinecap={'round'} strokeLinejoin={'round'} strokeWidth={'2'} d={'M6 18L18 6M6 6l12 12'} />
                             </svg>
                         </div>
                     )}
                     {showSpinnerOverlay && (
                         <Fade timeout={150} appear in>
-                            <div
-                                css={tw`absolute w-full h-full rounded flex items-center justify-center`}
-                                style={{ background: 'hsla(211, 10%, 53%, 0.35)', zIndex: 9999 }}
-                            >
+                            <div css={tw`absolute w-full h-full rounded flex items-center justify-center`} style={{ background: 'rgba(0,0,0,.55)', zIndex: 9999 }}>
                                 <Spinner />
                             </div>
                         </Fade>
                     )}
-                    <div
-                        className={'modal-surface'}
-                        css={tw`bg-neutral-800 p-3 sm:p-4 md:p-6 rounded shadow-md overflow-y-scroll transition-all duration-150`}
-                    >
+                    <div className={'modal-surface'} css={tw`p-3 sm:p-4 md:p-6 overflow-y-scroll transition-all duration-150`}>
                         {children}
                     </div>
                 </ModalContainer>
@@ -170,7 +127,6 @@ const Modal: React.FC<ModalProps> = ({
 
 const PortaledModal: React.FC<ModalProps> = ({ children, ...props }) => {
     const element = useRef(document.getElementById('modal-portal'));
-
     return createPortal(<Modal {...props}>{children}</Modal>, element.current!);
 };
 

@@ -16,35 +16,18 @@ type AnnouncementType = 'notice' | 'warning' | 'critical';
 const DISMISSED_ANNOUNCEMENT_KEY = 'rock:dismissed-announcement';
 
 const BannerContainer = styled.div<{ $severity: AnnouncementType }>`
-    width: 100%;
-    padding: 0.65rem 1.25rem;
+    position: relative;
+    z-index: 40;
     display: flex;
+    width: 100%;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    font-size: 0.85rem;
-    position: relative;
-    z-index: 40;
-    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.025);
-
-    ${(props) =>
-        props.$severity === 'critical'
-            ? `
-        background: linear-gradient(90deg, rgba(201, 79, 89, 0.25), rgba(160, 30, 45, 0.35));
-        border-bottom: 1px solid rgba(201, 79, 89, 0.4);
-        color: #fca5a5;
-    `
-            : props.$severity === 'warning'
-            ? `
-        background: linear-gradient(90deg, rgba(245, 158, 11, 0.18), rgba(180, 100, 10, 0.25));
-        border-bottom: 1px solid rgba(245, 158, 11, 0.35);
-        color: #fde047;
-    `
-            : `
-        background: linear-gradient(90deg, rgba(var(--shell-accent-rgb), 0.2), rgba(var(--shell-accent-rgb), 0.1));
-        border-bottom: 1px solid rgba(var(--shell-accent-rgb), 0.32);
-        color: var(--shell-text);
-    `}
+    padding: 0.65rem 1.25rem;
+    font-size: 0.82rem;
+    color: ${(props) => (props.$severity === 'critical' ? '#ff8b8f' : props.$severity === 'warning' ? '#f5a623' : '#a1a1a1')};
+    border-bottom: 1px solid #262626;
+    background: #0a0a0a;
 
     .banner-content {
         display: flex;
@@ -55,7 +38,7 @@ const BannerContainer = styled.div<{ $severity: AnnouncementType }>`
 
     .banner-text {
         min-width: 0;
-        font-weight: 500;
+        font-weight: 400;
         line-height: 1.4;
         overflow-wrap: anywhere;
     }
@@ -65,33 +48,35 @@ const BannerContainer = styled.div<{ $severity: AnnouncementType }>`
         align-items: center;
         gap: 0.35rem;
         margin-left: 0.5rem;
-        font-weight: 600;
-        text-decoration: underline;
+        color: #ededed;
+        font-weight: 500;
+        text-decoration: none;
+    }
 
-        &:hover {
-            opacity: 0.85;
-        }
+    .banner-link:hover {
+        color: #fff;
+        text-decoration: underline;
     }
 
     .dismiss-btn {
-        background: transparent;
-        border: none;
-        color: currentColor;
-        cursor: pointer;
-        opacity: 0.7;
-        padding: 0.25rem;
         display: flex;
-        align-items: center;
-        justify-content: center;
         width: 1.8rem;
         height: 1.8rem;
         flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        padding: 0.25rem;
+        color: #737373;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        background: transparent;
+        cursor: pointer;
+    }
 
-        &:hover {
-            opacity: 1;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 6px;
-        }
+    .dismiss-btn:hover {
+        color: #fff;
+        border-color: #262626;
+        background: #171717;
     }
 
     @media (max-width: 560px) {
@@ -121,12 +106,7 @@ export const AnnouncementBanner: React.FC = () => {
         () => sessionStorage.getItem(DISMISSED_ANNOUNCEMENT_KEY) || ''
     );
 
-    if (
-        !branding ||
-        !branding.announcementEnabled ||
-        !branding.announcementMessage ||
-        dismissedAnnouncement === fingerprint
-    ) {
+    if (!branding || !branding.announcementEnabled || !branding.announcementMessage || dismissedAnnouncement === fingerprint) {
         return null;
     }
 
@@ -157,12 +137,7 @@ export const AnnouncementBanner: React.FC = () => {
                     )}
                 </span>
             </div>
-            <button
-                type={'button'}
-                onClick={handleDismiss}
-                className={'dismiss-btn'}
-                aria-label={'Dismiss announcement'}
-            >
+            <button type={'button'} onClick={handleDismiss} className={'dismiss-btn'} aria-label={'Dismiss announcement'}>
                 <FontAwesomeIcon icon={faTimes} />
             </button>
         </BannerContainer>

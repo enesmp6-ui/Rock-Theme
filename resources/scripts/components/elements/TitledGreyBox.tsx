@@ -15,27 +15,27 @@ interface Props {
 
 const Shell = styled(FluidGlass)`
     overflow: hidden;
-    border-color: rgba(255, 255, 255, 0.085);
-    border-radius: 11px;
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(13, 12, 14, 0.93) 46%, rgba(70, 14, 22, 0.1));
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055), 0 18px 48px rgba(0, 0, 0, 0.14);
+    border-color: #262626;
+    border-radius: 8px;
+    background: #0a0a0a;
+    box-shadow: none;
 
     .box-heading {
         padding: 0.85rem 1rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.065);
-        background: linear-gradient(90deg, rgba(255, 255, 255, 0.022), rgba(var(--shell-accent-rgb), 0.04));
+        border-bottom: 1px solid #262626;
+        background: #0f0f0f;
     }
 
     .box-heading p {
-        color: #aaa6af;
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 0.64rem;
-        font-weight: 650;
-        letter-spacing: 0.11em;
+        color: #a1a1a1;
+        font-family: var(--font-geist-mono);
+        font-size: 0.68rem;
+        font-weight: 500;
+        letter-spacing: 0.02em;
     }
 
     .box-heading svg {
-        color: var(--shell-accent-bright);
+        color: #737373;
     }
 
     .box-body {
@@ -47,8 +47,8 @@ const TitledGreyBox = ({ icon, title, children, className }: Props) => (
     <Shell className={className}>
         <div className={'box-heading'}>
             {typeof title === 'string' ? (
-                <p css={tw`text-sm uppercase`}>
-                    {icon && <FontAwesomeIcon icon={icon} css={tw`mr-2 text-neutral-300`} />}
+                <p css={tw`text-sm`}>
+                    {icon && <FontAwesomeIcon icon={icon} css={tw`mr-2 text-neutral-400`} />}
                     {title}
                 </p>
             ) : (

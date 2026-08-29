@@ -1,5 +1,4 @@
 import React, { lazy } from 'react';
-import { hot } from 'react-hot-loader/root';
 import { Route, Router, Switch } from 'react-router-dom';
 import { StoreProvider } from 'easy-peasy';
 import { store } from '@/state';
@@ -14,8 +13,6 @@ import AuthenticatedRoute from '@/components/elements/AuthenticatedRoute';
 import { ServerContext } from '@/state/server';
 import '@/assets/tailwind.css';
 import Spinner from '@/components/elements/Spinner';
-import { AmbientCursor } from '@/components/elements/ReactBitsEffects';
-import SoftAurora from '@/components/elements/reactbits/SoftAurora';
 import ThemeRuntime from '@/components/ThemeRuntime';
 import PublicStatusPage from '@/components/status/PublicStatusPage';
 import AnnouncementBanner from '@/components/elements/AnnouncementBanner';
@@ -64,8 +61,6 @@ const App = () => {
     return (
         <>
             <GlobalStylesheet />
-            <SoftAurora />
-            <AmbientCursor />
             <StoreProvider store={store}>
                 <ThemeRuntime />
                 <AnnouncementBanner />
@@ -104,4 +99,4 @@ const App = () => {
     );
 };
 
-export default hot(App);
+export default App;

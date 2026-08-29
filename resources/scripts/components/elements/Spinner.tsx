@@ -20,26 +20,25 @@ const spin = keyframes`
     to { transform: rotate(360deg); }
 `;
 
-// noinspection CssOverwrittenProperties
 const SpinnerComponent = styled.div<Props>`
     ${tw`w-8 h-8`};
-    border-width: 3px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #262626;
+    border-top-color: #ededed;
     border-radius: 50%;
-    animation: ${spin} 1s cubic-bezier(0.55, 0.25, 0.25, 0.7) infinite;
+    animation: ${spin} 0.8s linear infinite;
+    box-shadow: none;
 
     ${(props) =>
         props.size === 'small'
-            ? tw`w-4 h-4 border-2`
+            ? tw`w-4 h-4`
             : props.size === 'large'
             ? css`
                   ${tw`w-16 h-16`};
-                  border-width: 6px;
+                  border-width: 3px;
               `
             : null};
-
-    border-color: ${(props) => (!props.isBlue ? 'rgba(255, 255, 255, 0.16)' : 'rgba(var(--shell-accent-rgb), 0.2)')};
-    border-top-color: ${(props) => (!props.isBlue ? 'rgb(255, 255, 255)' : 'var(--shell-accent-bright)')};
-    box-shadow: 0 0 24px rgba(var(--shell-accent-rgb), 0.08);
 `;
 
 const Spinner: Spinner = ({ centered, ...props }) =>

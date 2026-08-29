@@ -20,62 +20,62 @@ const RightNavigation = styled.div`
     & > a,
     & > button,
     & > .navigation-link {
-        ${tw`flex items-center justify-center no-underline cursor-pointer transition-all duration-150`};
-        width: 2.35rem;
-        height: 2.35rem;
-        margin-left: 0.35rem;
-        color: var(--shell-muted);
-        border: 1px solid var(--shell-border);
-        border-radius: 8px;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012));
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055);
-        backdrop-filter: blur(16px) saturate(1.3);
+        ${tw`flex items-center justify-center no-underline cursor-pointer`};
+        width: 2rem;
+        height: 2rem;
+        margin-left: 0.3rem;
+        color: #a1a1a1;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        background: transparent;
+        transition: color 120ms ease, background 120ms ease, border-color 120ms ease;
 
         &:active,
         &:hover {
-            color: var(--shell-text);
-            border-color: var(--shell-border-strong);
-            background: linear-gradient(135deg, var(--shell-accent-soft), rgba(255, 255, 255, 0.035));
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 10px 24px rgba(0, 0, 0, 0.16);
-            transform: translateY(-1px);
+            color: #fff;
+            border-color: var(--shell-border);
+            background: #111;
         }
     }
 
     & > a.active {
-        color: var(--shell-accent-bright);
-        border-color: rgba(var(--shell-accent-rgb), 0.42);
-        background: var(--shell-accent-soft);
+        color: #fff;
+        border-color: var(--shell-border);
+        background: #111;
     }
 
     & > .search-trigger {
-        width: 16rem;
-        padding: 0 0.75rem;
+        width: 15rem;
+        padding: 0 0.7rem;
         justify-content: flex-start;
-        gap: 0.65rem;
-        color: #737a91;
+        gap: 0.6rem;
+        color: #737373;
+        border-color: var(--shell-border);
+        background: #0a0a0a;
 
         .search-copy {
             overflow: hidden;
             flex: 1;
-            font-size: 0.76rem;
+            font-size: 0.75rem;
             text-align: left;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
 
         kbd {
-            padding: 0.16rem 0.42rem;
-            color: #80879c;
-            border: 1px solid rgba(148, 163, 184, 0.12);
-            border-radius: 6px;
-            background: rgba(255, 255, 255, 0.035);
-            font-size: 0.62rem;
+            padding: 0.12rem 0.36rem;
+            color: #737373;
+            border: 1px solid var(--shell-border);
+            border-radius: 5px;
+            background: #111;
+            font-family: var(--font-geist-mono);
+            font-size: 0.6rem;
         }
     }
 
     @media (max-width: 800px) {
         & > .search-trigger {
-            width: 2.55rem;
+            width: 2rem;
             padding: 0;
             justify-content: center;
 
@@ -91,10 +91,9 @@ const RightNavigation = styled.div`
         & > button,
         & > .navigation-link,
         & > .search-trigger {
-            width: 2.15rem;
-            height: 2.15rem;
-            margin-left: 0.25rem;
-            backdrop-filter: none;
+            width: 1.9rem;
+            height: 1.9rem;
+            margin-left: 0.2rem;
         }
     }
 `;
@@ -102,56 +101,48 @@ const RightNavigation = styled.div`
 const Topbar = styled.div`
     position: relative;
     border-bottom: 1px solid var(--shell-border);
-    background: linear-gradient(105deg, var(--shell-panel), var(--shell-panel-strong), var(--shell-panel));
-    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.025);
-    backdrop-filter: blur(22px) saturate(1.35);
+    background: #000;
 
     &::after {
-        position: absolute;
-        right: 12%;
-        bottom: -1px;
-        left: 12%;
-        height: 1px;
-        content: '';
-        pointer-events: none;
-        background: linear-gradient(90deg, transparent, rgba(var(--shell-accent-rgb), 0.42), transparent);
+        display: none;
     }
 
     .brand-mark {
         display: inline-flex;
+        flex: 0 0 auto;
         align-items: center;
         justify-content: center;
-        width: 1.75rem;
-        height: 1.75rem;
+        width: 1.7rem;
+        height: 1.7rem;
         margin-right: 0.6rem;
-        color: var(--shell-accent-bright);
-        border: 1px solid rgba(var(--shell-accent-rgb), 0.44);
-        border-radius: 6px;
-        background: rgba(var(--shell-accent-rgb), 0.09);
-        font-size: 0.72rem;
+        color: #000;
+        border: 1px solid #fff;
+        border-radius: 5px;
+        background: #fff;
+        font-family: var(--font-geist-mono);
+        font-size: 0.7rem;
+        font-weight: 700;
     }
 
     .brand-logo {
-        width: 1.75rem;
-        height: 1.75rem;
+        width: 1.7rem;
+        height: 1.7rem;
         margin-right: 0.6rem;
         flex: 0 0 auto;
-        border-radius: 6px;
+        border-radius: 5px;
         object-fit: contain;
     }
 
-    .brand-mark {
-        flex: 0 0 auto;
-    }
-
     .brand-name {
+        min-width: 0;
         color: var(--shell-text);
-        letter-spacing: -0.025em;
+        font-family: var(--font-geist);
+        font-weight: 600;
+        letter-spacing: -0.03em;
     }
 
     #logo,
-    #logo > a,
-    .brand-name {
+    #logo > a {
         min-width: 0;
     }
 
@@ -164,6 +155,15 @@ const Topbar = styled.div`
         text-align: right;
     }
 
+    .user-copy p:first-child {
+        color: #ededed;
+    }
+
+    .user-copy p:last-child {
+        color: #666;
+        font-family: var(--font-geist-mono);
+    }
+
     @media (max-width: 640px) {
         .user-copy,
         .optional-nav {
@@ -174,15 +174,10 @@ const Topbar = styled.div`
             font-size: 0.95rem;
         }
 
-        .brand-mark {
-            width: 1.65rem;
-            height: 1.65rem;
-            margin-right: 0.45rem;
-        }
-
+        .brand-mark,
         .brand-logo {
-            width: 1.65rem;
-            height: 1.65rem;
+            width: 1.6rem;
+            height: 1.6rem;
             margin-right: 0.45rem;
         }
     }
@@ -251,7 +246,7 @@ export default () => {
                         ) : (
                             <span className={'brand-mark'}>{branding.mark}</span>
                         )}
-                        <span className={'brand-name text-lg font-header font-semibold'}>{name}</span>
+                        <span className={'brand-name text-lg'}>{name}</span>
                     </Link>
                 </div>
 
@@ -271,8 +266,8 @@ export default () => {
                         </Tooltip>
                     )}
                     <div className={'user-copy'}>
-                        <p className={'text-xs font-semibold text-neutral-100 leading-tight'}>{username}</p>
-                        <p className={'text-2xs text-neutral-500 leading-tight'}>Control panel</p>
+                        <p className={'text-xs font-semibold leading-tight'}>{username}</p>
+                        <p className={'text-2xs leading-tight'}>Control panel</p>
                     </div>
                     <Tooltip placement={'bottom'} content={'Account Settings'}>
                         <NavLink to={'/account'}>

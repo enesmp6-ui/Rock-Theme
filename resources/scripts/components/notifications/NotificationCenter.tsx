@@ -25,15 +25,22 @@ const Center = styled.div`
         width: 2.35rem;
         height: 2.35rem;
         margin-left: 0.35rem;
-        color: var(--shell-muted);
-        border: 1px solid var(--shell-border);
-        border-radius: 8px;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012));
+        color: #a1a1a1;
+        border: 1px solid #262626;
+        border-radius: 6px;
+        background: #0a0a0a;
+    }
+
+    & > .notification-trigger:hover {
+        color: #fff;
+        border-color: #3f3f3f;
+        background: #111;
     }
 
     .notification-trigger {
         position: relative;
     }
+
     .notification-count {
         position: absolute;
         top: -0.3rem;
@@ -43,11 +50,12 @@ const Center = styled.div`
         height: 1rem;
         place-items: center;
         padding: 0 0.2rem;
-        color: white;
+        color: #000;
+        border: 1px solid #000;
         border-radius: 999px;
-        background: var(--shell-accent);
-        box-shadow: 0 0 12px rgba(var(--shell-accent-rgb), 0.34);
+        background: #fff;
         font-size: 0.58rem;
+        font-weight: 600;
     }
 `;
 
@@ -55,8 +63,7 @@ const NotificationBackdrop = styled.div`
     position: fixed;
     inset: 0;
     z-index: 998;
-    background: rgba(3, 2, 3, 0.66);
-    backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.64);
 `;
 
 const NotificationPanel = styled.div`
@@ -67,24 +74,11 @@ const NotificationPanel = styled.div`
     max-height: calc(100dvh - 5.75rem);
     overflow: hidden;
     flex-direction: column;
-    border: 1px solid rgba(var(--shell-accent-rgb), 0.24);
-    border-radius: 14px;
-    background: linear-gradient(150deg, rgba(var(--shell-accent-rgb), 0.1), transparent 52%),
-        color-mix(in srgb, var(--shell-panel-strong) 98.5%, transparent);
-    box-shadow: inset 0 1px 0 rgba(255, 225, 230, 0.055), 0 25px 70px rgba(0, 0, 0, 0.58),
-        0 0 42px rgba(var(--shell-accent-rgb), 0.07);
-    backdrop-filter: blur(24px) saturate(1.2);
-
-    &::before {
-        position: absolute;
-        top: 0;
-        right: 12%;
-        left: 12%;
-        height: 1px;
-        content: '';
-        pointer-events: none;
-        background: linear-gradient(90deg, transparent, rgba(var(--shell-accent-rgb), 0.58), transparent);
-    }
+    color: #ededed;
+    border: 1px solid #262626;
+    border-radius: 8px;
+    background: #0a0a0a;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
 
     .notification-head {
         position: sticky;
@@ -94,129 +88,125 @@ const NotificationPanel = styled.div`
         align-items: center;
         justify-content: space-between;
         padding: 0.85rem 1rem;
-        border-bottom: 1px solid rgba(var(--shell-accent-rgb), 0.14);
-        background: color-mix(in srgb, var(--shell-panel-strong) 90%, transparent);
-        backdrop-filter: blur(18px);
+        border-bottom: 1px solid #262626;
+        background: #0a0a0a;
     }
+
     .notification-head strong {
-        color: var(--shell-text);
+        color: #ededed;
         font-size: 0.84rem;
+        font-weight: 500;
     }
+
     .notification-head small {
         display: block;
         margin-top: 0.12rem;
-        color: var(--shell-muted);
+        color: #737373;
         font-size: 0.64rem;
     }
+
     .notification-actions {
         display: flex;
         align-items: center;
         gap: 0.35rem;
     }
+
     .notification-actions button {
         display: grid;
         width: 2rem;
         height: 2rem;
         place-items: center;
-        color: var(--shell-muted);
+        color: #a1a1a1;
         border: 1px solid transparent;
-        border-radius: 7px;
+        border-radius: 6px;
+        background: transparent;
     }
+
     .notification-actions button:hover {
-        color: var(--shell-accent-bright);
-        border-color: rgba(var(--shell-accent-rgb), 0.26);
-        background: rgba(var(--shell-accent-rgb), 0.12);
+        color: #fff;
+        border-color: #262626;
+        background: #171717;
     }
+
     .notification-list {
         min-height: 0;
         max-height: min(27rem, calc(100dvh - 9rem));
         overflow-y: auto;
         overscroll-behavior: contain;
     }
+
     .notification-item {
         position: relative;
         display: block;
         padding: 0.9rem 1rem 0.9rem 1.25rem;
-        color: var(--shell-text);
+        color: #ededed;
         text-decoration: none;
-        border-bottom: 1px solid var(--shell-border);
+        border-bottom: 1px solid #262626;
+        background: #0a0a0a;
     }
+
+    .notification-item:last-child {
+        border-bottom: 0;
+    }
+
     .notification-item::before {
         position: absolute;
         top: 1rem;
         left: 0.65rem;
-        width: 0.34rem;
-        height: 0.34rem;
+        width: 0.32rem;
+        height: 0.32rem;
         content: '';
         border-radius: 999px;
-        background: var(--shell-accent-bright);
-        box-shadow: 0 0 12px rgba(var(--shell-accent-rgb), 0.36);
+        background: #a1a1a1;
     }
-    .notification-item[data-tone='success']::before {
-        background: var(--shell-success);
-    }
-    .notification-item[data-tone='warning']::before {
-        background: var(--shell-warning);
-    }
-    .notification-item[data-tone='danger']::before {
-        background: var(--shell-danger);
-    }
+
+    .notification-item[data-tone='success']::before { background: #46a758; }
+    .notification-item[data-tone='warning']::before { background: #f5a623; }
+    .notification-item[data-tone='danger']::before { background: #e5484d; }
+
     .notification-item strong {
         display: block;
         overflow: hidden;
         font-size: 0.78rem;
+        font-weight: 500;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+
     .notification-item:hover {
-        background: rgba(var(--shell-accent-rgb), 0.07);
+        background: #111;
     }
+
     .notification-item small {
         display: block;
         margin-top: 0.25rem;
-        color: var(--shell-muted);
+        color: #737373;
         overflow-wrap: anywhere;
     }
+
     .notification-time {
-        color: var(--shell-muted);
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        color: #666;
+        font-family: var(--font-geist-mono);
         font-size: 0.58rem;
-        letter-spacing: 0.03em;
+        letter-spacing: 0;
     }
+
     .empty {
         padding: 2rem 1rem;
-        color: var(--shell-muted);
+        color: #737373;
         text-align: center;
     }
 
     @media (max-width: 700px) {
         width: auto;
-        border-radius: 16px;
+        border-radius: 8px;
 
-        .notification-head {
-            padding: 0.9rem 1rem;
-        }
-
-        .notification-head strong {
-            font-size: 0.9rem;
-        }
-
-        .notification-actions button {
-            width: 2.25rem;
-            height: 2.25rem;
-        }
-
-        .notification-list {
-            max-height: none;
-        }
-
-        .notification-item {
-            padding: 1rem 1rem 1rem 1.3rem;
-        }
-
-        .notification-item strong {
-            white-space: normal;
-        }
+        .notification-head { padding: 0.9rem 1rem; }
+        .notification-head strong { font-size: 0.9rem; }
+        .notification-actions button { width: 2.25rem; height: 2.25rem; }
+        .notification-list { max-height: none; }
+        .notification-item { padding: 1rem 1rem 1rem 1.3rem; }
+        .notification-item strong { white-space: normal; }
     }
 `;
 
@@ -280,11 +270,13 @@ export default () => {
             window.removeEventListener('rock:notifications-cleared', refresh);
         };
     }, []);
+
     useEffect(() => {
         sync();
         const timer = window.setInterval(sync, 60000);
         return () => window.clearInterval(timer);
     }, [sync]);
+
     useEffect(() => {
         if (!open) return;
         sync();
@@ -303,13 +295,11 @@ export default () => {
 
     useLayoutEffect(() => {
         if (!open) return;
-
         const updatePosition = () => setPanelPosition(getPanelPosition(trigger.current));
         updatePosition();
         window.addEventListener('resize', updatePosition);
         window.addEventListener('scroll', updatePosition, true);
         window.visualViewport?.addEventListener('resize', updatePosition);
-
         return () => {
             window.removeEventListener('resize', updatePosition);
             window.removeEventListener('scroll', updatePosition, true);
@@ -319,7 +309,6 @@ export default () => {
 
     useEffect(() => {
         if (!open || !panelPosition.mobile) return;
-
         const previous = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
         return () => {
@@ -339,16 +328,12 @@ export default () => {
                 aria-controls={'rock-notification-panel'}
             >
                 <FontAwesomeIcon icon={faBell} />
-                {!!items.length && (
-                    <span className={'notification-count'}>{items.length > 9 ? '9+' : items.length}</span>
-                )}
+                {!!items.length && <span className={'notification-count'}>{items.length > 9 ? '9+' : items.length}</span>}
             </button>
             {open &&
                 createPortal(
                     <>
-                        {panelPosition.mobile && (
-                            <NotificationBackdrop aria-hidden={'true'} onClick={() => setOpen(false)} />
-                        )}
+                        {panelPosition.mobile && <NotificationBackdrop aria-hidden={'true'} onClick={() => setOpen(false)} />}
                         <NotificationPanel
                             ref={panel}
                             id={'rock-notification-panel'}
@@ -357,17 +342,8 @@ export default () => {
                             aria-modal={panelPosition.mobile || undefined}
                             style={
                                 panelPosition.mobile
-                                    ? {
-                                          top: panelPosition.top,
-                                          right: 12,
-                                          left: 12,
-                                          maxHeight: panelPosition.maxHeight,
-                                      }
-                                    : {
-                                          top: panelPosition.top,
-                                          right: panelPosition.right,
-                                          maxHeight: panelPosition.maxHeight,
-                                      }
+                                    ? { top: panelPosition.top, right: 12, left: 12, maxHeight: panelPosition.maxHeight }
+                                    : { top: panelPosition.top, right: panelPosition.right, maxHeight: panelPosition.maxHeight }
                             }
                         >
                             <div className={'notification-head'}>
@@ -388,11 +364,7 @@ export default () => {
                                             <FontAwesomeIcon icon={faCheck} />
                                         </button>
                                     )}
-                                    <button
-                                        type={'button'}
-                                        onClick={() => setOpen(false)}
-                                        aria-label={'Close notifications'}
-                                    >
+                                    <button type={'button'} onClick={() => setOpen(false)} aria-label={'Close notifications'}>
                                         <FontAwesomeIcon icon={faTimes} />
                                     </button>
                                 </div>
@@ -409,9 +381,7 @@ export default () => {
                                             to={item.href || '/'}
                                             onClick={() => {
                                                 markRockNotificationRead(item.id);
-                                                if (item.remote) {
-                                                    markServerNotificationRead(item.id).catch(() => undefined);
-                                                }
+                                                if (item.remote) markServerNotificationRead(item.id).catch(() => undefined);
                                                 setOpen(false);
                                             }}
                                         >

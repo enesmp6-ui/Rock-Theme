@@ -2,50 +2,53 @@ import { useEffect } from 'react';
 import { useStoreState } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
 
-const hexToRgb = (value: string) => {
-    const match = /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(value);
-    return match ? [parseInt(match[1], 16), parseInt(match[2], 16), parseInt(match[3], 16)] : [201, 79, 89];
-};
-
-const mixWithWhite = (rgb: number[], amount = 0.38) =>
-    `rgb(${rgb.map((channel) => Math.round(channel + (255 - channel) * amount)).join(', ')})`;
-
 export default () => {
     const branding = useStoreState((state: ApplicationStore) => state.settings.data!.branding);
 
     useEffect(() => {
         const root = document.documentElement;
-        const themePreset = branding.themePreset === 'blue' ? 'blue' : 'makima';
-        const accent = themePreset === 'blue' ? '#5b8cff' : '#c94f59';
-        const rgb = hexToRgb(accent);
-        const glassStrength = Number.isFinite(branding.glassStrength) ? branding.glassStrength : 18;
-        const cardRadius = Number.isFinite(branding.cardRadius) ? branding.cardRadius : 12;
 
-        root.dataset.rockTheme = themePreset;
+        root.dataset.rockTheme = 'vercel';
         root.dataset.rockMotion = branding.motionEnabled ? 'full' : 'reduced';
-        root.style.setProperty('--shell-accent', accent);
-        root.style.setProperty('--shell-accent-rgb', rgb.join(', '));
-        root.style.setProperty('--shell-accent-bright', mixWithWhite(rgb));
-        root.style.setProperty('--shell-accent-soft', `rgba(${rgb.join(', ')}, 0.12)`);
-        root.style.setProperty('--shell-glass', `${Math.min(30, Math.max(0, glassStrength))}px`);
-        root.style.setProperty('--shell-radius', `${Math.min(20, Math.max(6, cardRadius))}px`);
+        root.style.setProperty('--shell-bg', '#000000');
+        root.style.setProperty('--shell-panel', '#0a0a0a');
+        root.style.setProperty('--shell-panel-strong', '#111111');
+        root.style.setProperty('--shell-panel-soft', '#171717');
+        root.style.setProperty('--shell-border', '#262626');
+        root.style.setProperty('--shell-border-strong', '#3f3f3f');
+        root.style.setProperty('--shell-text', '#ededed');
+        root.style.setProperty('--shell-muted', '#a1a1a1');
+        root.style.setProperty('--shell-accent', '#ffffff');
+        root.style.setProperty('--shell-accent-rgb', '255, 255, 255');
+        root.style.setProperty('--shell-accent-bright', '#ffffff');
+        root.style.setProperty('--shell-accent-soft', 'rgba(255, 255, 255, 0.08)');
+        root.style.setProperty('--shell-radius', '8px');
+        root.style.setProperty('--shell-glass', '0px');
 
         const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
-        themeColor?.setAttribute('content', themePreset === 'blue' ? '#070a10' : '#09090a');
+        themeColor?.setAttribute('content', '#000000');
 
         return () => {
             delete root.dataset.rockTheme;
             delete root.dataset.rockMotion;
             [
+                '--shell-bg',
+                '--shell-panel',
+                '--shell-panel-strong',
+                '--shell-panel-soft',
+                '--shell-border',
+                '--shell-border-strong',
+                '--shell-text',
+                '--shell-muted',
                 '--shell-accent',
                 '--shell-accent-rgb',
                 '--shell-accent-bright',
                 '--shell-accent-soft',
-                '--shell-glass',
                 '--shell-radius',
+                '--shell-glass',
             ].forEach((property) => root.style.removeProperty(property));
         };
-    }, [branding]);
+    }, [branding.motionEnabled]);
 
     return null;
 };
