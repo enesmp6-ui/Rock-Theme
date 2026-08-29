@@ -1,9 +1,5 @@
 import tw from 'twin.macro';
 import { createGlobalStyle } from 'styled-components/macro';
-// @ts-expect-error untyped font file
-import geist from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2';
-// @ts-expect-error untyped font file
-import geistMono from '@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2';
 
 export default createGlobalStyle`
     :root {
@@ -45,7 +41,7 @@ export default createGlobalStyle`
         font-style: normal;
         font-display: swap;
         font-weight: 100 900;
-        src: url(${geist}) format('woff2-variations');
+        src: url('https://cdn.jsdelivr.net/npm/@fontsource-variable/geist@5.3.0/files/geist-latin-wght-normal.woff2') format('woff2-variations');
     }
 
     @font-face {
@@ -53,7 +49,7 @@ export default createGlobalStyle`
         font-style: normal;
         font-display: swap;
         font-weight: 100 900;
-        src: url(${geistMono}) format('woff2-variations');
+        src: url('https://cdn.jsdelivr.net/npm/@fontsource-variable/geist-mono@5.3.0/files/geist-mono-latin-wght-normal.woff2') format('woff2-variations');
     }
 
     html,
